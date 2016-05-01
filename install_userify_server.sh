@@ -29,6 +29,8 @@ sudo yum install -q -y --enablerepo=epel redis python-pip && \
 sudo which apt-get && \
     (
     echo "Installing Debian/Ubuntu Prerequisites"
+    sudo apt-get update
+    sudo apt-get -qy upgrade
     sudo apt-get install -qyy python-pip build-essential python-dev libffi-dev zlib1g-dev \
     libjpeg-dev libssl-dev python-lxml libxml2-dev libldap2-dev libsasl2-dev redis-server
     )
