@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash -e
 
 # Userify Server Installer Script
 # Copyright (c) 2016 Userify Corporation
@@ -16,7 +16,7 @@ read url
 sudo which yum && (
 echo "Installing RHEL/CENT/Amazon Prerequisites"
 sudo yum install -q -y python-devel libffi-devel openssl-devel libxml2-devel \
-    gcc gcc-c++ libxslt-devel openldap-devel cyrus-sasl-devel python-pip
+    gcc gcc-c++ libxslt-devel openldap-devel cyrus-sasl-devel python-pip libjpeg-devel
 sudo yum install -q -y \
     http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-6.noarch.rpm
 sudo yum install -q -y --enablerepo=epel redis python-pip && \
