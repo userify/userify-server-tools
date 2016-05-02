@@ -3,7 +3,7 @@
 # Userify Server Installer Script
 # Copyright (c) 2016 Userify Corporation
 # By Jamieson Becker
-# curl https://releases.userify.com/install_userify_server.sh > install_userify_server.sh
+# curl https://github.com/userify/userify-server-tools/blob/master/install_userify_server.sh > install_userify_server.sh
 # sudo bash ./install_userify_server.sh
 
 echo "Please paste the URL for your userify server installable."
