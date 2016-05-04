@@ -111,10 +111,35 @@ EOF
 
 
 sudo mv userify-server-init /etc/init.d/userify-server
-sudo chmod 755 /etc/init.d/userify-server /opt/userify-server/userify-server
 [ -f /usr/sbin/chkconfig ] && sudo chkconfig userify-server on
 [ -f /usr/sbin/update-rc.d ] && sudo update-rc.d userify-server enable
 
+sudo cat 'EOF' > /opt/userify-server/userify-start
+#! /bin/sh
+#
+# Userify Startup
+# Auto restart with 3 seconds.
+# 
+
+(while true;
+do
+
+    # userify automatically attempts to bind to 443 and 80
+    # (dropping permissions after startup)
+    # but will not produce an error unless it cannot bind
+    # HTTP to localhost:8120 or the port number specified here.
+
+    # For additional performance, use HA Proxy or nginx to:
+    #   proxy to localhost for /api/
+    #   static files to /opt/userify-server/web/
+
+    /opt/userify-server/userify-server server "8120"
+    sleep 3
+
+done) &
+EOF
+
+sudo chmod 755 /etc/init.d/userify-server /opt/userify-server/userify-server /opt/userify-server/userify-start
 
 echo
 echo The server will finish installation, set permissions, and create a
@@ -122,4 +147,4 @@ echo /opt/userify-server/web directory containing the static files used by the
 echo server.
 
 # This completes installation
-sudo /opt/userify-server/userify-server &
+sudo /opt/userify-server/userify-start &
