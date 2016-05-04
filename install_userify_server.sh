@@ -36,6 +36,39 @@ sudo which apt-get && \
     )
 
 # ALL DISTRIBUTIONS
+
+# if any required packages are missing, they will be installed automatically by
+# userify-server upon first startup, but doing this first helps catch any
+# first-start issues.
+
+sudo pip install \
+    requests \
+    python-ldap \
+    python-slugify \
+    paste \
+    jinja2 \
+    shortuuid \
+    bottle \
+    otpauth \
+    qrcode \
+    ipwhois \
+    netaddr \
+    setproctitle \
+    py-bcrypt \
+    termcolor \
+    tomorrow \
+    addict \
+    pynacl \
+    rq \
+    boto \
+    pyindent \
+    spooky \
+    redis \
+    pillow \
+    emails \
+    html2text
+
+
 sudo mkdir /opt/userify-server
 sudo chown $(whoami ) /opt/userify-server/
 curl "$url" | gunzip > /opt/userify-server/userify-server
@@ -88,5 +121,5 @@ echo The server will finish installation, set permissions, and create a
 echo /opt/userify-server/web directory containing the static files used by the
 echo server.
 
-sudo /opt/userify-server/userify-server
+# This completes installation
 sudo /opt/userify-server/userify-start &
