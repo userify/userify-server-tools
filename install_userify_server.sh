@@ -122,4 +122,4 @@ echo /opt/userify-server/web directory containing the static files used by the
 echo server.
 
 # This completes installation
-sudo /opt/userify-server/userify-start &
+sudo /opt/userify-server/userify-server &
