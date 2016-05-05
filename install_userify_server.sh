@@ -13,6 +13,8 @@ read url
 # The sudoers fix is due to a long-standing bug in RHEL that will be corrected in RHEL8:
 # https://bugzilla.redhat.com/show_bug.cgi?id=1020147
 
+# consider replacing full redis server with hiredis.x86_64
+
 sudo which yum && (
 echo "Installing RHEL/CENT/Amazon Prerequisites"
 sudo yum install -q -y python-devel libffi-devel openssl-devel libxml2-devel \
@@ -42,6 +44,7 @@ sudo which apt-get && \
 # first-start issues.
 
 sudo pip install \
+    pyasn1 \
     requests \
     python-ldap \
     python-slugify \
