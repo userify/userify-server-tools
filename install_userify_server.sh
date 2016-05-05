@@ -114,7 +114,7 @@ sudo mv userify-server-init /etc/init.d/userify-server
 [ -f /usr/sbin/chkconfig ] && sudo chkconfig userify-server on
 [ -f /usr/sbin/update-rc.d ] && sudo update-rc.d userify-server enable
 
-sudo cat 'EOF' > /opt/userify-server/userify-start
+cat << 'EOF' > userify-start
 #! /bin/sh
 #
 # Userify Startup
@@ -138,6 +138,8 @@ do
 
 done) &
 EOF
+
+sudo mv userify-start /opt/userify-server/userify-start
 
 sudo chmod 755 /etc/init.d/userify-server /opt/userify-server/userify-server /opt/userify-server/userify-start
 
