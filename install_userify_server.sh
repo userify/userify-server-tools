@@ -22,7 +22,6 @@ sudo yum install -q -y python-devel libffi-devel openssl-devel libxml2-devel \
 sudo yum install -q -y \
     http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-6.noarch.rpm
 sudo yum install -q -y --enablerepo=epel redis python-pip && \
-    sudo pip install pyopenssl && \
     sudo chkconfig redis on && \
     sudo sed -i "s/Defaults requiretty/# &/" /etc/sudoers && \
     sudo service redis start )
@@ -43,8 +42,15 @@ sudo which apt-get && \
 # userify-server upon first startup, but doing this first helps catch any
 # first-start issues.
 
+# pyasn1 and cryptography installs are to work around SNI issues with older
+# openssl
+
+# see also https://github.com/kennethreitz/requests/issues/2022
+
 sudo pip install \
+    cryptography \
     pyasn1 \
+    pyopenssl \
     requests \
     python-ldap \
     python-slugify \
