@@ -32,9 +32,11 @@ sudo which apt-get && \
     echo "Installing Debian/Ubuntu Prerequisites"
     sudo apt-get update
     sudo apt-get -qy upgrade
-    sudo apt-get install -qyy python-pip build-essential python-dev libffi-dev zlib1g-dev \
+    sudo apt-get install -qyy build-essential python-dev libffi-dev zlib1g-dev \
     libjpeg-dev libssl-dev python-lxml libxml2-dev libldap2-dev libsasl2-dev redis-server
+    curl "https://bootstrap.pypa.io/get-pip.py" | sudo /usr/bin/python
     )
+
 
 # ALL DISTRIBUTIONS
 
@@ -47,10 +49,13 @@ sudo which apt-get && \
 
 # see also https://github.com/kennethreitz/requests/issues/2022
 
+
+set -e
 sudo pip install \
-    cryptography \
+    ndg-httpsclient \
     pyasn1 \
     pyopenssl \
+    cryptography \
     requests \
     python-ldap \
     python-slugify \
@@ -69,6 +74,7 @@ sudo pip install \
     addict \
     pynacl \
     rq \
+    stripe \
     boto \
     pyindent \
     spooky \
