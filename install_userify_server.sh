@@ -74,7 +74,6 @@ sudo pip install \
     addict \
     pynacl \
     rq \
-    stripe \
     boto \
     pyindent \
     spooky \
