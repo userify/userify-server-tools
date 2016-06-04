@@ -54,12 +54,9 @@ set -e
 sudo pip install \
     ndg-httpsclient \
     pyasn1 \
-    pyopenssl \
-    cryptography \
     requests \
     python-ldap \
     python-slugify \
-    paste \
     jinja2 \
     shortuuid \
     bottle \
@@ -70,6 +67,9 @@ sudo pip install \
     setproctitle \
     py-bcrypt \
     termcolor \
+    gevent \
+    gevent-websocket \
+    ssl \
     tomorrow \
     addict \
     pynacl \
