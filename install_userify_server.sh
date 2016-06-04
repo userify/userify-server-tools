@@ -6,6 +6,13 @@
 # curl https://raw.githubusercontent.com/userify/userify-server-tools/master/install_userify_server.sh > install_userify_server.sh
 # sudo bash ./install_userify_server.sh
 
+# PYTHON=${PYTHON:-$(which python)}
+# if  [ $("$PYTHON -c 'import platform; print platform.python_version_tuple()[0]') = 3 ]; then
+#     echo "Although work is progressing, some libraries that Userify relies on currently support Python 2 only."
+#     exit 1
+# fi
+
+
 echo "Please paste the URL for your userify server installable."
 read url
 
@@ -69,7 +76,6 @@ sudo pip install \
     termcolor \
     gevent \
     gevent-websocket \
-    ssl \
     tomorrow \
     addict \
     pynacl \
@@ -85,6 +91,11 @@ sudo pip install \
     cryptography \
     paste
 
+# OLD Python versions (python <= 2.5) also need ssl installed:
+# (it's built in on python 2.6 and later.)
+# sudo pip install ssl 
+# However, we do not officially support distributions
+# that are that old for the server.
 
 sudo mkdir /opt/userify-server
 sudo chown $(whoami ) /opt/userify-server/
