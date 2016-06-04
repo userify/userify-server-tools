@@ -80,7 +80,10 @@ sudo pip install \
     redis \
     pillow \
     emails \
-    html2text
+    html2text \
+    pyopenssl \
+    cryptography \
+    paste
 
 
 sudo mkdir /opt/userify-server
