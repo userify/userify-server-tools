@@ -22,28 +22,41 @@ read url
 
 # consider replacing full redis server with hiredis.x86_64
 
-sudo which yum && (
-echo "Installing RHEL/CENT/Amazon Prerequisites"
-sudo yum install -q -y python-devel libffi-devel openssl-devel libxml2-devel \
-    gcc gcc-c++ libxslt-devel openldap-devel cyrus-sasl-devel python-pip libjpeg-devel
-sudo yum install -q -y \
-    http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-6.noarch.rpm
-sudo yum install -q -y --enablerepo=epel redis python-pip && \
-    sudo chkconfig redis on && \
-    sudo sed -i "s/Defaults requiretty/# &/" /etc/sudoers && \
-    sudo service redis start )
+
+# RHEL/CENTOS PREREQUISITES
+function rhel_prereqs {
+    echo "Installing RHEL/CENT/Amazon Prerequisites"
+    sudo yum install -q -y python-devel libffi-devel openssl-devel libxml2-devel \
+        gcc gcc-c++ libxslt-devel openldap-devel cyrus-sasl-devel python-pip libjpeg-devel
+        ntp ntpdate ntp-doc
+    sudo ntpdate pool.ntp.org
+    sudo chkconfig ntpd on
+    sudo service ntpd start
+    sudo yum install -q -y \
+        http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-6.noarch.rpm
+    sudo yum install -q -y --enablerepo=epel redis python-pip && \
+        sudo chkconfig redis on && \
+        sudo sed -i "s/Defaults requiretty/# &/" /etc/sudoers && \
+        sudo service redis start
+}
 
 # DEBIAN/UBUNTU PREREQUISITES
-sudo which apt-get && \
-    (
+function debian_prereqs {
     echo "Installing Debian/Ubuntu Prerequisites"
     sudo apt-get update
     sudo apt-get -qy upgrade
-    sudo apt-get install -qyy build-essential python-dev libffi-dev zlib1g-dev \
-    libjpeg-dev libssl-dev python-lxml libxml2-dev libldap2-dev libsasl2-dev redis-server
+    sudo apt-get install -qqy build-essential python-dev libffi-dev zlib1g-dev \
+    libjpeg-dev libssl-dev python-lxml libxml2-dev libldap2-dev libsasl2-dev redis-server \
+    ntpdate
+    # get immediate timefix
+    sudo ntpdate pool.ntp.org
+    sudo apt-get install -qqy ntp
     curl "https://bootstrap.pypa.io/get-pip.py" | sudo /usr/bin/python
-    )
+}
 
+
+sudo which yum && rhel_prereqs
+sudo which apt-get && debian_prereqs
 
 # ALL DISTRIBUTIONS
 
