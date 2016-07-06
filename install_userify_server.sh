@@ -102,7 +102,10 @@ sudo pip install \
     html2text \
     pyopenssl \
     cryptography \
-    paste
+    paste \
+    python-digitalocean \
+
+
 
 # OLD Python versions (python <= 2.5) also need ssl installed:
 # (it's built in on python 2.6 and later.)
