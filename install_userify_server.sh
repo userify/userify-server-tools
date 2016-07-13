@@ -46,8 +46,8 @@ function debian_prereqs {
     sudo apt-get update
     sudo apt-get -qy upgrade
     sudo apt-get install -qqy build-essential python-dev libffi-dev zlib1g-dev \
-    libjpeg-dev libssl-dev python-lxml libxml2-dev libldap2-dev libsasl2-dev redis-server \
-    ntpdate
+    libjpeg-dev libssl-dev python-lxml libxml2-dev libldap2-dev libsasl2-dev \
+    libxslt1-dev redis-server ntpdate
     # get immediate timefix
     sudo ntpdate pool.ntp.org
     sudo apt-get install -qqy ntp
