@@ -71,7 +71,7 @@ sudo which apt-get && debian_prereqs
 
 
 set -e
-sudo pip install \
+sudo pip install --upgrade \
     ndg-httpsclient \
     pyasn1 \
     requests \
