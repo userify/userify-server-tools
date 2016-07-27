@@ -87,8 +87,6 @@ sudo pip install --upgrade \
     setproctitle \
     py-bcrypt \
     termcolor \
-    gevent \
-    gevent-websocket \
     tomorrow \
     addict \
     pynacl \
@@ -104,6 +102,8 @@ sudo pip install --upgrade \
     cryptography \
     paste \
     python-digitalocean \
+    # gevent==1.1b4 \
+    # gevent-websocket \
 
 
 
