@@ -26,20 +26,24 @@ read url
 # The sudoers fix is due to a long-standing bug in RHEL that will be corrected in RHEL8:
 # https://bugzilla.redhat.com/show_bug.cgi?id=1020147
 
-# consider replacing full redis server with hiredis.x86_64
+# 
+# for Enterprise with autoscaling,
+# consider offering option to replace
+# full redis server with client hiredis.x86_64
+#
 
+epel_release=http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
 
 # RHEL/CENTOS PREREQUISITES
 function rhel_prereqs {
     echo "Installing RHEL/CENT/Amazon Prerequisites"
     sudo yum install -q -y python-devel libffi-devel openssl-devel libxml2-devel \
-        gcc gcc-c++ libxslt-devel openldap-devel cyrus-sasl-devel python-pip libjpeg-devel \
+        gcc gcc-c++ libxslt-devel openldap-devel cyrus-sasl-devel libjpeg-devel \
         ntp ntpdate ntp-doc
     sudo ntpdate pool.ntp.org
     sudo chkconfig ntpd on
     sudo service ntpd start
-    sudo yum install -q -y \
-        http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-6.noarch.rpm
+    sudo yum install -q -y $epel_release
     sudo yum install -q -y --enablerepo=epel redis python-pip && \
         sudo chkconfig redis on && \
         sudo sed -i "s/Defaults requiretty/# &/" /etc/sudoers && \
