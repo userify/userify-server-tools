@@ -12,7 +12,6 @@
 #     exit 1
 # fi
 
-
 echo "PLEASE NOTE: AUTOMATIC REDIS INSTALLATION"
 echo "This script will automatically install Redis for single-server"
 echo "installation. For multi-server or third-party redis (Elasticache, RedisLabs, etc)"
@@ -43,8 +42,9 @@ function rhel_prereqs {
     sudo ntpdate pool.ntp.org
     sudo chkconfig ntpd on
     sudo service ntpd start
+    curl "https://bootstrap.pypa.io/get-pip.py" | sudo /usr/bin/env python
     sudo yum install -q -y $epel_release
-    sudo yum install -q -y --enablerepo=epel redis python-pip && \
+    sudo yum install -q -y --enablerepo=epel redis && \
         sudo chkconfig redis on && \
         sudo sed -i "s/Defaults requiretty/# &/" /etc/sudoers && \
         sudo service redis start
@@ -61,7 +61,7 @@ function debian_prereqs {
     # get immediate timefix
     sudo ntpdate pool.ntp.org
     sudo apt-get install -qqy ntp
-    curl "https://bootstrap.pypa.io/get-pip.py" | sudo /usr/bin/python
+    curl "https://bootstrap.pypa.io/get-pip.py" | sudo /usr/bin/env python
 }
 
 
