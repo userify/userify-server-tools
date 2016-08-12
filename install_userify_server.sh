@@ -81,6 +81,7 @@ sudo which apt-get 2>/dev/null && debian_prereqs
 
 
 set -e
+PATH="/usr/local/bin/:/usr/local/sbin/:$PATH"
 sudo $(which pip) install --upgrade \
     ndg-httpsclient \
     pyasn1 \
