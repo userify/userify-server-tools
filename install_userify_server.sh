@@ -13,6 +13,12 @@
 # fi
 
 
+echo "PLEASE NOTE: AUTOMATIC REDIS INSTALLATION"
+echo "This script will automatically install Redis for single-server"
+echo "installation. For multi-server or third-party redis (Elasticache, RedisLabs, etc)"
+echo "support, please remove the local Redis server after installation completes, as"
+echo "Redis is no longer required for all installations."
+echo
 echo "Please paste the URL for your userify server installable."
 read url
 
@@ -27,7 +33,7 @@ read url
 function rhel_prereqs {
     echo "Installing RHEL/CENT/Amazon Prerequisites"
     sudo yum install -q -y python-devel libffi-devel openssl-devel libxml2-devel \
-        gcc gcc-c++ libxslt-devel openldap-devel cyrus-sasl-devel python-pip libjpeg-devel
+        gcc gcc-c++ libxslt-devel openldap-devel cyrus-sasl-devel python-pip libjpeg-devel \
         ntp ntpdate ntp-doc
     sudo ntpdate pool.ntp.org
     sudo chkconfig ntpd on
