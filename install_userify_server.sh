@@ -61,8 +61,8 @@ function debian_prereqs {
 }
 
 
-sudo which yum && rhel_prereqs
-sudo which apt-get && debian_prereqs
+sudo which yum 2>/dev/null && rhel_prereqs
+sudo which apt-get 2>/dev/null && debian_prereqs
 
 # ALL DISTRIBUTIONS
 
