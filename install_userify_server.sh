@@ -12,14 +12,19 @@
 #     exit 1
 # fi
 
-echo "PLEASE NOTE: AUTOMATIC REDIS INSTALLATION"
-echo "This script will automatically install Redis for single-server"
-echo "installation. For multi-server or third-party redis (Elasticache, RedisLabs, etc)"
-echo "support, please remove the local Redis server after installation completes, as"
-echo "Redis is no longer required for all installations."
-echo
-echo "Please paste the URL for your userify server installable."
-read url
+if [ ! $URL ]; then
+
+    echo "PLEASE NOTE: AUTOMATIC REDIS INSTALLATION"
+    echo "This script will automatically install Redis for single-server"
+    echo "installation. For multi-server or third-party redis (Elasticache, RedisLabs, etc)"
+    echo "support, please remove the local Redis server after installation completes, as"
+    echo "Redis is no longer required for all installations."
+    echo
+    echo "Please paste the URL for your userify server installable."
+    read URL
+
+fi
+
 
 # RHEL/CENT/AMAZON PREREQUISITES
 # The sudoers fix is due to a long-standing bug in RHEL that will be corrected in RHEL8:
@@ -127,7 +132,7 @@ sudo $pip install --upgrade \
 
 sudo mkdir /opt/userify-server
 sudo chown $(whoami ) /opt/userify-server/
-curl "$url" | gunzip > /opt/userify-server/userify-server
+curl "$URL" | gunzip > /opt/userify-server/userify-server
 
 
 cat << "EOF" > userify-server-init
