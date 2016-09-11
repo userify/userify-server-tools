@@ -1,4 +1,4 @@
-#! /bin/bash -e
+#! /bin/bash -ex
 
 # Userify Server Installer Script
 # Copyright (c) 2016 Userify Corporation
@@ -175,10 +175,10 @@ case "$1" in
         pgrep userify-server
         ;;
     restart)
-        stop; start
+        $0 stop; $0 start
         ;;
     reload)
-        stop; start
+        $0 stop; $0 start
         ;;
     *)
         echo "Usage: userify-server {start|stop|status|reload|restart}"
