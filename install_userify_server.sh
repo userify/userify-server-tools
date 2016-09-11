@@ -60,15 +60,15 @@ function debian_prereqs {
     echo "Installing Debian/Ubuntu Prerequisites"
     sudo apt-get update
     sudo apt-get -qy upgrade
-    sudo apt-get install -qqy build-essential python-dev libffi-dev zlib1g-dev \
+    sudo apt-get install -qqy build-essential python-dev python-pip libffi-dev zlib1g-dev \
     libjpeg-dev libssl-dev python-lxml libxml2-dev libldap2-dev libsasl2-dev \
     libxslt1-dev redis-server ntpdate
     # get immediate timefix
     sudo ntpdate pool.ntp.org
     sudo apt-get install -qqy ntp
-    curl "https://bootstrap.pypa.io/get-pip.py" | sudo /usr/bin/env python
+    # taken out curl since debian's apt-get installer works better
+    # curl "https://bootstrap.pypa.io/get-pip.py" | sudo /usr/bin/env python
 }
-
 
 sudo which yum 2>/dev/null && rhel_prereqs
 sudo which apt-get 2>/dev/null && debian_prereqs
@@ -83,7 +83,6 @@ sudo which apt-get 2>/dev/null && debian_prereqs
 # openssl
 
 # see also https://github.com/kennethreitz/requests/issues/2022
-
 
 set -e
 PATH="/usr/local/bin/:/usr/local/sbin/:$PATH"
@@ -130,13 +129,28 @@ sudo $pip install --upgrade \
 # However, we do not officially support distributions
 # that are that old for the server.
 
-sudo mkdir /opt/userify-server
-sudo chown $(whoami ) /opt/userify-server/
-curl "$URL" | gunzip > /opt/userify-server/userify-server
+if [[ ! -e /opt/userify-server/userify-server ]]; then
+    if [[ ! -e /opt/userify-server ]]; then
+        sudo mkdir /opt/userify-server
+        sudo chown $(whoami ) /opt/userify-server/
+    fi
+    curl "$URL" | gunzip > /opt/userify-server/userify-server
+fi
 
 
 cat << "EOF" > userify-server-init
-#! /bin/bash
+#!/bin/bash
+#
+### BEGIN INIT INFO
+# Provides:          userify-server
+# Required-Start:    $local_fs $remote_fs $network $syslog $named
+# Required-Stop:     $local_fs $remote_fs $network $syslog $named
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: starts the userify-server
+# Description:       starts the userify-server from the /opt directory
+### END INIT INFO
+
 # /etc/rc.d/init.d/userify-server
 # Userify Server startup script
 # This script is designed for maximum compatibility across all distributions,
@@ -173,10 +187,10 @@ EOF
 
 sudo mv userify-server-init /etc/init.d/userify-server
 [ -f /usr/sbin/chkconfig ] && sudo chkconfig userify-server on
-[ -f /usr/sbin/update-rc.d ] && sudo update-rc.d userify-server enable
+[ -f /usr/sbin/update-rc.d ] && sudo update-rc.d userify-server defaults
 
 cat << 'EOF' > userify-start
-#! /bin/sh
+#!/bin/sh
 #
 # Userify Startup
 # Auto restart with 3 seconds.
