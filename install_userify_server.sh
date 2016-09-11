@@ -45,14 +45,21 @@ function rhel_prereqs {
         gcc gcc-c++ libxslt-devel openldap-devel cyrus-sasl-devel libjpeg-devel \
         ntp ntpdate ntp-doc
     sudo ntpdate pool.ntp.org
+    set +e
+    sudo chkconfig --add ntpd
     sudo chkconfig ntpd on
+    set -e
     sudo service ntpd start
     curl "https://bootstrap.pypa.io/get-pip.py" | sudo /usr/bin/env python
     sudo yum install -q -y $epel_release
+
+    # Redis installation fails on Amazon Linux due to missing systemd:
+
     sudo yum install -q -y --enablerepo=epel redis && \
         sudo chkconfig redis on && \
         sudo sed -i "s/Defaults requiretty/# &/" /etc/sudoers && \
         sudo service redis start
+
 }
 
 # DEBIAN/UBUNTU PREREQUISITES
@@ -138,7 +145,8 @@ if [[ ! -d  /opt/userify-server ]]; then
 fi
 
 # always overwrite:
-[[ -f  /opt/userify-server ]] && sudo rm /opt/userify-server/userify-server
+[[ -f  /opt/userify-server/userify-server ]] && \
+    sudo rm /opt/userify-server/userify-server
 curl "$URL" | gunzip > /opt/userify-server/userify-server
 
 
@@ -191,7 +199,12 @@ esac
 EOF
 
 sudo mv userify-server-init /etc/init.d/userify-server
-[ -f /usr/sbin/chkconfig ] && sudo chkconfig userify-server on
+if [ -f /usr/sbin/chkconfig ]; then
+    set +e
+    sudo chkconfig --add userify-server
+    sudo chkconfig userify-server on
+    set -e
+fi
 [ -f /usr/sbin/update-rc.d ] && sudo update-rc.d userify-server defaults
 
 cat << 'EOF' > userify-start
