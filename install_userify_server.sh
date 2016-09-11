@@ -5,7 +5,7 @@
 # Installation instructions:
 # https://userify.com/docs/enterprise/installation-enterprise/
 
-if [[ ! $URL ]]; then
+if [ ! $URL ]; then
 cat <<- EOF
 PLEASE NOTE: AUTOMATIC REDIS INSTALLATION
 
@@ -132,15 +132,15 @@ sudo $pip install --upgrade \
 # However, we do not officially support distributions
 # that are that old for the server.
 
-if [[ ! -d  /opt/userify-server ]]; then
+if [ ! -d  /opt/userify-server ]; then
     sudo mkdir /opt/userify-server
-    sudo chown "$(whoami )" /opt/userify-server/
+    sudo chown $(whoami ) /opt/userify-server/
 fi
 
 # This will always overwrite the existing userify-server file with a new copy
 # A basic "update/upgrade"
 
-if [[ -f /opt/userify-server/userify-server ]]; then
+if [ -f /opt/userify-server/userify-server ]; then
     sudo rm /opt/userify-server/userify-server
 fi
 curl "$URL" | gunzip > /opt/userify-server/userify-server
