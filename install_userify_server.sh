@@ -140,10 +140,6 @@ fi
 # This will always overwrite the existing userify-server file with a new copy
 # A basic "update/upgrade"
 
-# Should the server not temporarily quit or pause while removing/redownloading
-# the server file? Or is the program able to continue running while this is
-# called?
-
 if [[ -f /opt/userify-server/userify-server ]]; then
     sudo rm /opt/userify-server/userify-server
 fi
