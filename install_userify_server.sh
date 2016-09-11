@@ -138,6 +138,7 @@ if [[ ! -d  /opt/userify-server ]]; then
 fi
 
 # always overwrite:
+[[ -f  /opt/userify-server ]] && sudo rm /opt/userify-server/userify-server
 curl "$URL" | gunzip > /opt/userify-server/userify-server
 
 
