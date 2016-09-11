@@ -2,15 +2,8 @@
 
 # Userify Server Installer Script
 # Copyright (c) 2016 Userify Corporation
-# By Jamieson Becker
-# curl https://raw.githubusercontent.com/userify/userify-server-tools/master/install_userify_server.sh > install_userify_server.sh
-# sudo bash ./install_userify_server.sh
-
-# PYTHON=${PYTHON:-$(which python)}
-# if  [ $("$PYTHON -c 'import platform; print platform.python_version_tuple()[0]') = 3 ]; then
-#     echo "Although work is progressing, some libraries that Userify relies on currently support Python 2 only."
-#     exit 1
-# fi
+# Installation instructions:
+# https://userify.com/docs/enterprise/installation-enterprise/
 
 if [ ! $URL ]; then
 
@@ -25,12 +18,11 @@ if [ ! $URL ]; then
 
 fi
 
-
 # RHEL/CENT/AMAZON PREREQUISITES
 # The sudoers fix is due to a long-standing bug in RHEL that will be corrected in RHEL8:
 # https://bugzilla.redhat.com/show_bug.cgi?id=1020147
 
-# 
+#
 # for Enterprise with autoscaling,
 # consider offering option to replace
 # full redis server with client hiredis.x86_64
@@ -135,7 +127,7 @@ sudo $pip install --upgrade \
 
 # OLD Python versions (python <= 2.5) also need ssl installed:
 # (it's built in on python 2.6 and later.)
-# sudo pip install ssl 
+# sudo pip install ssl
 # However, we do not officially support distributions
 # that are that old for the server.
 
@@ -159,13 +151,13 @@ cat << "EOF" > userify-server-init
 
 # Add $redis-server below if needed.
 
-### BEGIN INIT INFO 
-# Provides:          userify-server 
+### BEGIN INIT INFO
+# Provides:          userify-server
 # Required-Start:    $network $syslog
 # Required-Stop:     $network $syslog
-# Default-Start:     2 3 4 5 
-# Default-Stop:      0 1 6 
-# Short-Description: Start userify-server at boot time 
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start userify-server at boot time
 # Description:       Starts the Userify Server https://userify.com from /opt/userify-server.
 ### END INIT INFO
 
@@ -212,7 +204,7 @@ cat << 'EOF' > userify-start
 #
 # Userify Startup
 # Auto restart with 3 seconds.
-# 
+#
 
 (while true;
 do
