@@ -157,12 +157,12 @@ cat << "EOF" > userify-server-init
 # This script is designed for maximum compatibility across all distributions,
 # including those that are running systemd and sysv
 
-# ENTERPRISE with AUTOSCALING: remove redis-server from required-start below:
+# Add $redis-server below if needed.
 
 ### BEGIN INIT INFO 
 # Provides:          userify-server 
-# Required-Start:    $network $redis-server $syslog $named
-# Required-Stop:     $network $redis-server $syslog $named
+# Required-Start:    $network $syslog
+# Required-Stop:     $network $syslog
 # Default-Start:     2 3 4 5 
 # Default-Stop:      0 1 6 
 # Short-Description: Start userify-server at boot time 
