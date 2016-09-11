@@ -2,15 +2,8 @@
 
 # Userify Server Installer Script
 # Copyright (c) 2016 Userify Corporation
-# By Jamieson Becker
-# curl https://raw.githubusercontent.com/userify/userify-server-tools/master/install_userify_server.sh > install_userify_server.sh
-# sudo bash -sE ./install_userify_server.sh
-
-# PYTHON=${PYTHON:-$(which python)}
-# if  [ $("$PYTHON -c 'import platform; print platform.python_version_tuple()[0]') = 3 ]; then
-#     echo "Although work is progressing, some libraries that Userify relies on currently support Python 2 only."
-#     exit 1
-# fi
+# Installation instructions:
+# https://userify.com/docs/enterprise/installation-enterprise/
 
 if [[ ! $URL ]]; then
 cat <<- EOF
@@ -27,7 +20,6 @@ Now, please paste the required URL for your userify server installation.
 EOF
 read -r URL
 fi
-
 
 # RHEL/CENT/AMAZON PREREQUISITES
 # The sudoers fix is due to a long-standing bug in RHEL that will be corrected in RHEL8:
@@ -173,7 +165,6 @@ cat << "EOF" > userify-server-init
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: Start userify-server at boot time
-
 # Description:       Starts the Userify Server https://userify.com from /opt/userify-server.
 ### END INIT INFO
 
@@ -208,24 +199,13 @@ esac
 EOF
 
 sudo mv userify-server-init /etc/init.d/userify-server
-sudo chmod +x  /etc/init.d/userify-server
-#if [[ $(which -s  chkconfig) == "0" ]]; then
-#   set +e
-#   sudo chkconfig --add userify-server
-#   sudo chkconfig userify-server on
-#   set -e
-#fi
 if [ -f /usr/sbin/chkconfig ]; then
     set +e
     sudo chkconfig --add userify-server
     sudo chkconfig userify-server on
     set -e
 fi
-
 [ -f /usr/sbin/update-rc.d ] && sudo update-rc.d userify-server defaults
-#elif [[ $(which -s update-rc.d) == "0" ]]; then
-#   sudo update-rc.d userify-server defaults
-#fi
 
 cat << "EOF" > userify-start
 #!/bin/sh
@@ -265,4 +245,4 @@ echo "server."
 echo ""
 
 # This completes installation
-sudo /opt/userify-server/userify-start
+sudo /opt/userify-server/userify-start &
