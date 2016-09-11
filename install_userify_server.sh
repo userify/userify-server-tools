@@ -130,8 +130,12 @@ sudo $pip install --upgrade \
 # However, we do not officially support distributions
 # that are that old for the server.
 
-sudo mkdir /opt/userify-server
-sudo chown $(whoami ) /opt/userify-server/
+if [[ ! -d  /opt/userify-server ]]; then
+    sudo mkdir /opt/userify-server
+    sudo chown $(whoami ) /opt/userify-server/
+fi
+
+# always overwrite:
 curl "$URL" | gunzip > /opt/userify-server/userify-server
 
 
@@ -142,10 +146,23 @@ cat << "EOF" > userify-server-init
 # This script is designed for maximum compatibility across all distributions,
 # including those that are running systemd and sysv
 
+# ENTERPRISE with AUTOSCALING: remove redis-server from required-start below:
+
+### BEGIN INIT INFO 
+# Provides:          userify-server 
+# Required-Start:    $network $redis-server $syslog $named
+# Required-Stop:     $network $redis-server $syslog $named
+# Default-Start:     2 3 4 5 
+# Default-Stop:      0 1 6 
+# Short-Description: Start userify-server at boot time 
+# Description:       Starts the Userify Server https://userify.com from /opt/userify-server.
+### END INIT INFO
+
 # chkconfig: 2345 20 80
 # description: Userify Server startup script
 case "$1" in
     start)
+        stop
         echo -n "Starting Userify Server: "
         /opt/userify-server/userify-start &
         ;;
@@ -158,10 +175,10 @@ case "$1" in
         pgrep userify-server
         ;;
     restart)
-        $0 stop; $0 start
+        stop; start
         ;;
     reload)
-        $0 stop; $0 start
+        stop; start
         ;;
     *)
         echo "Usage: userify-server {start|stop|status|reload|restart}"
@@ -170,10 +187,9 @@ case "$1" in
 esac
 EOF
 
-
 sudo mv userify-server-init /etc/init.d/userify-server
 [ -f /usr/sbin/chkconfig ] && sudo chkconfig userify-server on
-[ -f /usr/sbin/update-rc.d ] && sudo update-rc.d userify-server enable
+[ -f /usr/sbin/update-rc.d ] && sudo update-rc.d userify-server defaults
 
 cat << 'EOF' > userify-start
 #! /bin/sh
@@ -184,6 +200,8 @@ cat << 'EOF' > userify-start
 
 (while true;
 do
+
+    chmod +x /opt/userify-server/userify-server
 
     # userify automatically attempts to bind to 443 and 80
     # (dropping permissions after startup)
