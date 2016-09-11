@@ -66,7 +66,9 @@ function debian_prereqs {
     # get immediate timefix
     sudo ntpdate pool.ntp.org
     sudo apt-get install -qqy ntp
-    curl "https://bootstrap.pypa.io/get-pip.py" | sudo /usr/bin/env python
+    set +e
+    curl "https://bootstrap.pypa.io/get-pip.py" | sudo -H /usr/bin/env python
+    set -e
 }
 
 
