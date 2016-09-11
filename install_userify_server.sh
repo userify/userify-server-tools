@@ -48,14 +48,21 @@ function rhel_prereqs {
         gcc gcc-c++ libxslt-devel openldap-devel cyrus-sasl-devel libjpeg-devel \
         ntp ntpdate ntp-doc
     sudo ntpdate pool.ntp.org
+    set +e
+    sudo chkconfig --add ntpd
     sudo chkconfig ntpd on
+    set -e
     sudo service ntpd start
     curl "https://bootstrap.pypa.io/get-pip.py" | sudo /usr/bin/env python
     sudo yum install -q -y $epel_release
+
+    # Redis installation fails on Amazon Linux due to missing systemd:
+
     sudo yum install -q -y --enablerepo=epel redis && \
         sudo chkconfig redis on && \
         sudo sed -i "s/Defaults requiretty/# &/" /etc/sudoers && \
         sudo service redis start
+
 }
 
 # DEBIAN/UBUNTU PREREQUISITES
@@ -92,7 +99,7 @@ sudo which apt-get 2>/dev/null && debian_prereqs
 set -e
 PATH="/usr/local/bin/:/usr/local/sbin/:$PATH"
 pip=$(which pip)
-sudo "$(which pip)" install --upgrade \
+sudo $pip install --upgrade \
     ndg-httpsclient \
     pyasn1 \
     requests \
@@ -140,7 +147,14 @@ fi
 
 # This will always overwrite the existing userify-server file with a new copy
 # A basic "update/upgrade"
-[[ -f  /opt/userify-server ]] && sudo rm /opt/userify-server/userify-server
+
+# Should the server not temporarily quit or pause while removing/redownloading
+# the server file? Or is the program able to continue running while this is
+# called?
+
+if [[ -f /opt/userify-server/userify-server ]]; then
+    sudo rm /opt/userify-server/userify-server
+fi
 curl "$URL" | gunzip > /opt/userify-server/userify-server
 
 cat << "EOF" > userify-server-init
@@ -150,15 +164,16 @@ cat << "EOF" > userify-server-init
 # This script is designed for maximum compatibility across all distributions,
 # including those that are running systemd and sysv
 
-# ENTERPRISE with AUTOSCALING: remove redis-server from required-start below:
+# Add $redis-server below if needed.
 
 ### BEGIN INIT INFO
 # Provides:          userify-server
-# Required-Start:    $network $redis-server $syslog $named
-# Required-Stop:     $network $redis-server $syslog $named
+# Required-Start:    $network $syslog
+# Required-Stop:     $network $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: Start userify-server at boot time
+
 # Description:       Starts the Userify Server https://userify.com from /opt/userify-server.
 ### END INIT INFO
 
@@ -194,9 +209,19 @@ EOF
 
 sudo mv userify-server-init /etc/init.d/userify-server
 sudo chmod +x  /etc/init.d/userify-server
-[ -f /usr/sbin/chkconfig ] && sudo chkconfig userify-server on
 #if [[ $(which -s  chkconfig) == "0" ]]; then
+#   set +e
+#   sudo chkconfig --add userify-server
 #   sudo chkconfig userify-server on
+#   set -e
+#fi
+if [ -f /usr/sbin/chkconfig ]; then
+    set +e
+    sudo chkconfig --add userify-server
+    sudo chkconfig userify-server on
+    set -e
+fi
+
 [ -f /usr/sbin/update-rc.d ] && sudo update-rc.d userify-server defaults
 #elif [[ $(which -s update-rc.d) == "0" ]]; then
 #   sudo update-rc.d userify-server defaults
