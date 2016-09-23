@@ -1,21 +1,24 @@
-#! /bin/bash -ex
+#!/bin/bash -ex
 
 # Userify Server Installer Script
 # Copyright (c) 2016 Userify Corporation
 # Installation instructions:
 # https://userify.com/docs/enterprise/installation-enterprise/
 
-if [ ! $URL ]; then
+if [[ ! $URL ]]; then
+cat <<- EOF
+PLEASE NOTE: AUTOMATIC REDIS INSTALLATION
 
-    echo "PLEASE NOTE: AUTOMATIC REDIS INSTALLATION"
-    echo "This script will automatically install Redis for single-server"
-    echo "installation. For multi-server or third-party redis (Elasticache, RedisLabs, etc)"
-    echo "support, please remove the local Redis server after installation completes, as"
-    echo "Redis is no longer required for all installations."
-    echo
-    echo "Please paste the URL for your userify server installable."
-    read URL
+This script will automatically install Redis Server Database for a
+single-server installation.
 
+For a multi-server or using third-party redis (Elasticache, RedisLabs, etc)
+support, remove the local Redis server after installation completes, as
+Redis is no longer required for all installations.
+
+Now, please paste the required URL for your userify server installation.
+EOF
+read -r URL
 fi
 
 # RHEL/CENT/AMAZON PREREQUISITES
@@ -85,7 +88,6 @@ sudo which apt-get 2>/dev/null && debian_prereqs
 
 # see also https://github.com/kennethreitz/requests/issues/2022
 
-
 set -e
 PATH="/usr/local/bin/:/usr/local/sbin/:$PATH"
 pip=$(which pip)
@@ -124,7 +126,6 @@ sudo $pip install --upgrade \
     # gevent-websocket \
 
 
-
 # OLD Python versions (python <= 2.5) also need ssl installed:
 # (it's built in on python 2.6 and later.)
 # sudo pip install ssl
@@ -133,17 +134,19 @@ sudo $pip install --upgrade \
 
 if [[ ! -d  /opt/userify-server ]]; then
     sudo mkdir /opt/userify-server
-    sudo chown $(whoami ) /opt/userify-server/
+    sudo chown "$(whoami )" /opt/userify-server/
 fi
 
-# always overwrite:
-[[ -f  /opt/userify-server/userify-server ]] && \
+# This will always overwrite the existing userify-server file with a new copy
+# A basic "update/upgrade"
+
+if [[ -f /opt/userify-server/userify-server ]]; then
     sudo rm /opt/userify-server/userify-server
+fi
 curl "$URL" | gunzip > /opt/userify-server/userify-server
 
-
 cat << "EOF" > userify-server-init
-#! /bin/bash
+#!/bin/bash
 # /etc/rc.d/init.d/userify-server
 # Userify Server startup script
 # This script is designed for maximum compatibility across all distributions,
@@ -163,9 +166,10 @@ cat << "EOF" > userify-server-init
 
 # chkconfig: 2345 20 80
 # description: Userify Server startup script
+
 case "$1" in
     start)
-        stop
+        # removed stop
         echo -n "Starting Userify Server: "
         /opt/userify-server/userify-start &
         ;;
@@ -199,8 +203,8 @@ if [ -f /usr/sbin/chkconfig ]; then
 fi
 [ -f /usr/sbin/update-rc.d ] && sudo update-rc.d userify-server defaults
 
-cat << 'EOF' > userify-start
-#! /bin/sh
+cat << "EOF" > userify-start
+#!/bin/sh
 #
 # Userify Startup
 # Auto restart with 3 seconds.
@@ -230,10 +234,11 @@ sudo mv userify-start /opt/userify-server/userify-start
 
 sudo chmod 755 /etc/init.d/userify-server /opt/userify-server/userify-server /opt/userify-server/userify-start
 
-echo
-echo The server will finish installation, set permissions, and create a
-echo /opt/userify-server/web directory containing the static files used by the
-echo server.
+echo ""
+echo "The server will finish installation, set permissions, and create a "
+echo "/opt/userify-server/web directory containing the static files used by the"
+echo "server."
+echo ""
 
 # This completes installation
 sudo /opt/userify-server/userify-start &
