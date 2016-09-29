@@ -224,7 +224,7 @@ do
     #   proxy to localhost for /api/
     #   static files to /opt/userify-server/web/
 
-    /opt/userify-server/userify-server server "8120"
+    /opt/userify-server/userify-server server "8120" 2>&1 | logger -t userify-server
     sleep 3
 
 done) &
