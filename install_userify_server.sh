@@ -36,9 +36,12 @@ epel_release=http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.no
 # RHEL/CENTOS PREREQUISITES
 function rhel_prereqs {
     echo "Installing RHEL/CENT/Amazon Prerequisites"
+    set +e
+    # Annoying behavior of RHEL: error status if 'nothing to do'
     sudo yum install -q -y python-devel libffi-devel openssl-devel libxml2-devel \
         gcc gcc-c++ libxslt-devel openldap-devel cyrus-sasl-devel libjpeg-devel \
         ntp ntpdate ntp-doc
+    set -e
     sudo ntpdate pool.ntp.org
     set +e
     sudo chkconfig --add ntpd
