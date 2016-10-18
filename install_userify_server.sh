@@ -31,17 +31,33 @@ fi
 # full redis server with client hiredis.x86_64
 #
 
+if [[ $(uname -a |grep amzn) ]]; then
+    # Error: Package: redis-2.8.19-2.el7.x86_64 (epel)
+    # Requires: systemd
+    cat <<- EOF
+Amazon Linux does not support installation of Redis, so this script does not
+support installation on Amazon Linux.  However, if you install Redis on Amazon
+Linux separately, or if you are using Userify Enterprise with a non-local Redis
+server, then please review this script and install separately. (Be sure to snap
+an AMI afterward.) Also, if you need additional assitance, or would like a
+pre-installed Userify server published to your AWS account at no additional
+charge, please contact support.
+
+EOF
+    exit 1
+fi
+
 epel_release=http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
 
 # RHEL/CENTOS PREREQUISITES
 function rhel_prereqs {
     echo "Installing RHEL/CENT/Amazon Prerequisites"
-    set +e
+    sudo pkill ntpd # this aborts next line on Amazon
     # Annoying behavior of RHEL: error status if 'nothing to do'
+    set +e
     sudo yum install -q -y python-devel libffi-devel openssl-devel libxml2-devel \
         gcc gcc-c++ libxslt-devel openldap-devel cyrus-sasl-devel libjpeg-devel \
         ntp ntpdate ntp-doc
-    set -e
     sudo ntpdate pool.ntp.org
     set +e
     sudo chkconfig --add ntpd
