@@ -163,6 +163,7 @@ if [[ -f /opt/userify-server/userify-server ]]; then
     sudo rm /opt/userify-server/userify-server
 fi
 curl "$URL" | gunzip > /opt/userify-server/userify-server
+chmod +x  /opt/userify-server/userify-server
 
 cat << "EOF" > userify-server-init
 #!/bin/bash
@@ -214,6 +215,7 @@ esac
 EOF
 
 sudo mv userify-server-init /etc/init.d/userify-server
+chmod +x /etc/init.d/userify-server
 if [ -f /usr/sbin/chkconfig ]; then
     set +e
     sudo chkconfig --add userify-server
@@ -228,6 +230,15 @@ cat << "EOF" > userify-start
 # Userify Startup
 # Auto restart with 3 seconds.
 #
+
+# RECOMMENDED KERNEL SETTINGS
+# for Userify:
+/sbin/sysctl -w fs.file-max=1048576
+ulimit -n 1048576
+# recommended for local Redis:
+/sbin/sysctl vm.overcommit_memory=1
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+
 
 (while true;
 do
