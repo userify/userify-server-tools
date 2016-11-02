@@ -271,4 +271,7 @@ echo "server."
 echo ""
 
 # This completes installation
+
+[ -f /usr/sbin/update-rc.d ] && sudo update-rc.d userify-server defaults
+
 sudo /opt/userify-server/userify-start &
