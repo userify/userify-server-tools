@@ -225,7 +225,7 @@ fi
 [ -f /usr/sbin/update-rc.d ] && sudo update-rc.d userify-server defaults
 
 cat << "EOF" > userify-start
-#!/bin/sh
+#!/bin/bash
 #
 # Userify Startup
 # Auto restart with 3 seconds.
@@ -254,7 +254,8 @@ do
     #   proxy to localhost for /api/
     #   static files to /opt/userify-server/web/
 
-    /opt/userify-server/userify-server server "8120" 2>&1 | logger -t userify-server
+    /opt/userify-server/userify-server server "8120" 2>&1 | tee -a /var/log/userify-server.log >(logger -t userify-server)
+
     sleep 3
 
 done) &
@@ -264,11 +265,30 @@ sudo mv userify-start /opt/userify-server/userify-start
 
 sudo chmod 755 /etc/init.d/userify-server /opt/userify-server/userify-server /opt/userify-server/userify-start
 
-echo ""
-echo "The server will finish installation, set permissions, and create a "
+if [ -d /etc/logrotate.d ]; then
+    cat <<EOF | sudo tee - /etc/logrotate.d/userify-server 2>/dev/null
+# Userify Server log rotation
+/var/log/userify-server.log {
+    daily
+    rotate 7
+    missingok
+    create 640 userify-server root
+    compress
+}
+EOF
+
+else
+    echo "/etc/logrotate.d not found. Please configure log rotation for /var/log/userify-server.log"
+    echo "for your distribution, or email support@userify.com for assistance."
+fi
+
+echo
+echo
+echo "The server will now installation, set permissions, and create a "
 echo "/opt/userify-server/web directory containing the static files used by the"
 echo "server."
-echo ""
+echo
+echo Please note: logging is to /var/log/userify-server.log.
 
 # This completes installation
 
