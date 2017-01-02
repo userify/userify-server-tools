@@ -111,6 +111,7 @@ set -e
 PATH="/usr/local/bin/:/usr/local/sbin/:$PATH"
 pip=$(which pip)
 sudo $pip install --upgrade \
+    cffi \
     ndg-httpsclient \
     pyasn1 \
     requests \
