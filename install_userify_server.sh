@@ -64,7 +64,7 @@ function rhel_prereqs {
     sudo chkconfig ntpd on
     set -e
     sudo service ntpd start
-    curl "https://bootstrap.pypa.io/get-pip.py" | sudo /usr/bin/env python
+    curl -# "https://bootstrap.pypa.io/get-pip.py" | sudo /usr/bin/env python
     sudo yum install -q -y $epel_release
 
     # Redis installation fails on Amazon Linux due to missing systemd:
@@ -88,7 +88,7 @@ function debian_prereqs {
     sudo ntpdate pool.ntp.org
     sudo apt-get install -qqy ntp
     set +e
-    curl "https://bootstrap.pypa.io/get-pip.py" | sudo -H /usr/bin/env python
+    curl -# "https://bootstrap.pypa.io/get-pip.py" | sudo -H /usr/bin/env python
     set -e
 }
 
@@ -163,7 +163,7 @@ fi
 if [[ -f /opt/userify-server/userify-server ]]; then
     sudo rm /opt/userify-server/userify-server
 fi
-curl "$URL" | gunzip > /opt/userify-server/userify-server
+curl -# "$URL" | gunzip > /opt/userify-server/userify-server
 chmod +x  /opt/userify-server/userify-server
 
 cat << "EOF" > userify-server-init
