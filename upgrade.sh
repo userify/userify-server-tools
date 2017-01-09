@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # example usage:
-# sudo curl https://raw.githubusercontent.com/userify/userify-server-tools/master/upgrade.sh | sudo bash
+# curl https://usrfy.io/upgrade.sh  |sudo bash
 
 echo "Usage: $0 EDITION"
 echo "EDITION can be 'enterprise' or 'pro'"
