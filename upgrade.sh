@@ -1,7 +1,7 @@
 #! /bin/bash -e
 
 # example usage:
-# curl https://usrfy.io/upgrade.sh enterprise |sudo bash
+# curl -# https://usrfy.io/upgrade.sh enterprise |sudo bash
 
 tmpfile=$(mktemp)
 edition="$1"
@@ -11,7 +11,7 @@ if [ -z "$edition" ]; then
     echo "EDITION defaults to enterprise and can be 'enterprise' or 'pro'. If you are on pro, please press control-C now."
 fi
 
-curl -q "https://releases.userify.com/dist/userify-$edition-server.gz" | gunzip > "$tmpfile"
+curl -# "https://releases.userify.com/dist/userify-$edition-server.gz" | gunzip > "$tmpfile"
 
 echo "One moment.. you can cancel now by pressing control-C."
 # sleep for a few seconds to allow control-C
