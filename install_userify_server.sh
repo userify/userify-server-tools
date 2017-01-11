@@ -283,16 +283,43 @@ else
     echo "for your distribution, or email support@userify.com for assistance."
 fi
 
-echo
-echo
-echo "The server will now installation, set permissions, and create a "
-echo "/opt/userify-server/web directory containing the static files used by the"
-echo "server."
-echo
-echo Please note: logging is to /var/log/userify-server.log.
-
-# This completes installation
-
 [ -f /usr/sbin/update-rc.d ] && sudo update-rc.d userify-server defaults
 
-sudo /opt/userify-server/userify-start &
+sudo /opt/userify-server/userify-start 2>&1 |sudo tee /var/log/userify-server.log >/dev/null &
+
+sleep 1
+
+cat << "EOF" | more
+
+Welcome to Userify!       INSTALLATION COMPLETE
+
+Next, connect to this server's IP on HTTPS (i.e., https://192.168.1.1) and
+configure it.
+
+CONFIGURE THE SERVER:
+
+    1.  Configure where this server will store its encrypted data. You can
+        choose local disk/NFS, or S3. This server should now be running Redis
+        for caching and ephemeral data. You can convert this server to
+        run as a Userify Enterprise cluster later if desired.
+
+    2.  Set up the configuration user FOR THIS SERVER. This is a special user
+        that\'s only used to configure the server.
+
+    3.  Be sure to configure a mail server. This way you'll be able to send
+        Invitations, password resets, event notifications, etc. We support
+        Gmail, Exchange, Amazon SES, and standard SMTP servers.
+
+    4.  Click Save to have your server restart. You can re-access that by
+        clicking the Server Configuration button later.
+
+Once your server restarts after initial configuration, create a Userify
+admin user. Please note: this is a user account that is used to create your
+company and can appoint other admins. It is a different user account than the
+one shown above, which is only used for server configuration.
+
+Lots more docs at https://userify.com/docs, and reach out to support@userify.com
+if you have any questions.
+
+That's it! Thanks for installing Userify!
+EOF
