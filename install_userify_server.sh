@@ -269,7 +269,7 @@ sudo mv userify-start /opt/userify-server/userify-start
 sudo chmod 755 /etc/init.d/userify-server /opt/userify-server/userify-server /opt/userify-server/userify-start
 
 if [ -d /etc/logrotate.d ]; then
-    cat <<EOF | sudo tee - /etc/logrotate.d/userify-server 2>/dev/null
+    cat <<EOF | sudo tee /etc/logrotate.d/userify-server >/dev/null
 # Userify Server log rotation
 /var/log/userify-server.log {
     daily
@@ -292,6 +292,8 @@ sudo /opt/userify-server/userify-start 2>&1 |sudo tee /var/log/userify-server.lo
 sleep 1
 
 cat << "EOF" | more
+
+
 
 Welcome to Userify!       INSTALLATION COMPLETE
 
