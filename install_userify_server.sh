@@ -21,7 +21,7 @@ EOF
 read -r URL
 fi
 
-# RHEL/CENT/AMAZON PREREQUISITES
+# RHEL/CentOS/AMAZON PREREQUISITES
 # The sudoers fix is due to a long-standing bug in RHEL that will be corrected in RHEL8:
 # https://bugzilla.redhat.com/show_bug.cgi?id=1020147
 
@@ -49,9 +49,9 @@ fi
 
 epel_release=http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
 
-# RHEL/CENTOS PREREQUISITES
+# RHEL/CentOS PREREQUISITES
 function rhel_prereqs {
-    echo "Installing RHEL/CENT/Amazon Prerequisites"
+    echo "Installing RHEL/CentOS/Amazon Prerequisites"
     sudo pkill ntpd # this aborts next line on Amazon
     # Annoying behavior of RHEL: error status if 'nothing to do'
     set +e
