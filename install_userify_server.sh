@@ -47,7 +47,8 @@ EOF
     exit 1
 fi
 
-epel_release=http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
+# epel_release=http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
+epel_release=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
 # RHEL/CentOS PREREQUISITES
 function rhel_prereqs {
@@ -65,7 +66,9 @@ function rhel_prereqs {
     set -e
     sudo service ntpd start
     curl -# "https://bootstrap.pypa.io/get-pip.py" | sudo /usr/bin/env python
+    set +e
     sudo yum install -q -y $epel_release
+    set -e
 
     # Redis installation fails on Amazon Linux due to missing systemd:
 
