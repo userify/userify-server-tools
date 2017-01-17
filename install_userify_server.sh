@@ -47,7 +47,6 @@ EOF
     exit 1
 fi
 
-# epel_release=http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
 epel_release=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
 # RHEL/CentOS PREREQUISITES
