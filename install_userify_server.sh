@@ -5,6 +5,8 @@
 # Installation instructions:
 # https://userify.com/docs/enterprise/installation-enterprise/
 
+SUDO=$(which sudo)
+
 if [[ ! $URL ]]; then
 cat <<- EOF
 PLEASE NOTE: AUTOMATIC REDIS INSTALLATION
@@ -52,51 +54,51 @@ epel_release=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.
 # RHEL/CentOS PREREQUISITES
 function rhel_prereqs {
     echo "Installing RHEL/CentOS/Amazon Prerequisites"
-    sudo pkill ntpd # this aborts next line on Amazon
+    $SUDO pkill ntpd # this aborts next line on Amazon
     # Annoying behavior of RHEL: error status if 'nothing to do'
     set +e
-    sudo yum install -q -y python-devel libffi-devel openssl-devel libxml2-devel \
+    $SUDO yum install -q -y python-devel libffi-devel openssl-devel libxml2-devel \
         gcc gcc-c++ libxslt-devel openldap-devel cyrus-sasl-devel libjpeg-devel \
         ntp ntpdate ntp-doc
-    sudo ntpdate pool.ntp.org
+    $SUDO ntpdate pool.ntp.org
     set +e
-    sudo chkconfig --add ntpd
-    sudo chkconfig ntpd on
+    $SUDO chkconfig --add ntpd
+    $SUDO chkconfig ntpd on
     set -e
-    sudo service ntpd start
-    curl -# "https://bootstrap.pypa.io/get-pip.py" | sudo /usr/bin/env python
+    $SUDO service ntpd start
+    curl -# "https://bootstrap.pypa.io/get-pip.py" | $SUDO /usr/bin/env python
     set +e
-    sudo yum install -q -y $epel_release
+    $SUDO yum install -q -y $epel_release
     set -e
 
     # Redis installation fails on Amazon Linux due to missing systemd:
 
-    sudo yum install -q -y --enablerepo=epel redis && \
-        sudo chkconfig redis on && \
-        sudo sed -i "s/Defaults requiretty/# &/" /etc/sudoers && \
-        sudo service redis start
+    $SUDO yum install -q -y --enablerepo=epel redis && \
+        $SUDO chkconfig redis on && \
+        $SUDO sed -i "s/Defaults requiretty/# &/" /etc/sudoers && \
+        $SUDO service redis start
 
 }
 
 # DEBIAN/UBUNTU PREREQUISITES
 function debian_prereqs {
     echo "Installing Debian/Ubuntu Prerequisites"
-    sudo apt-get update
-    sudo apt-get -qy upgrade
-    sudo apt-get install -qqy build-essential python-dev libffi-dev zlib1g-dev \
+    $SUDO apt-get update
+    $SUDO apt-get -qy upgrade
+    $SUDO apt-get install -qqy build-essential python-dev libffi-dev zlib1g-dev \
     libjpeg-dev libssl-dev python-lxml libxml2-dev libldap2-dev libsasl2-dev \
-    libxslt1-dev redis-server ntpdate
+    libxslt1-dev redis-server ntpdate curl
     # get immediate timefix
-    sudo ntpdate pool.ntp.org
-    sudo apt-get install -qqy ntp
+    $SUDO ntpdate pool.ntp.org
+    $SUDO apt-get install -qqy ntp
     set +e
-    curl -# "https://bootstrap.pypa.io/get-pip.py" | sudo -H /usr/bin/env python
+    curl -# "https://bootstrap.pypa.io/get-pip.py" | $SUDO -H /usr/bin/env python
     set -e
 }
 
 
-sudo which yum 2>/dev/null && rhel_prereqs
-sudo which apt-get 2>/dev/null && debian_prereqs
+$SUDO which yum 2>/dev/null && rhel_prereqs
+$SUDO which apt-get 2>/dev/null && debian_prereqs
 
 # ALL DISTRIBUTIONS
 
@@ -112,7 +114,7 @@ sudo which apt-get 2>/dev/null && debian_prereqs
 set -e
 PATH="/usr/local/bin/:/usr/local/sbin/:$PATH"
 pip=$(which pip)
-sudo $pip install --upgrade \
+$SUDO $pip install --upgrade \
     cffi \
     ndg-httpsclient \
     pyasn1 \
@@ -155,15 +157,15 @@ sudo $pip install --upgrade \
 # that are that old for the server.
 
 if [[ ! -d  /opt/userify-server ]]; then
-    sudo mkdir /opt/userify-server
-    sudo chown "$(whoami )" /opt/userify-server/
+    $SUDO mkdir /opt/userify-server
+    $SUDO chown "$(whoami )" /opt/userify-server/
 fi
 
 # This will always overwrite the existing userify-server file with a new copy
 # A basic "update/upgrade"
 
 if [[ -f /opt/userify-server/userify-server ]]; then
-    sudo rm /opt/userify-server/userify-server
+    $SUDO rm /opt/userify-server/userify-server
 fi
 curl -# "$URL" | gunzip > /opt/userify-server/userify-server
 chmod +x  /opt/userify-server/userify-server
@@ -217,15 +219,15 @@ case "$1" in
 esac
 EOF
 
-sudo mv userify-server-init /etc/init.d/userify-server
+$SUDO mv userify-server-init /etc/init.d/userify-server
 chmod +x /etc/init.d/userify-server
 if [ -f /usr/sbin/chkconfig ]; then
     set +e
-    sudo chkconfig --add userify-server
-    sudo chkconfig userify-server on
+    $SUDO chkconfig --add userify-server
+    $SUDO chkconfig userify-server on
     set -e
 fi
-[ -f /usr/sbin/update-rc.d ] && sudo update-rc.d userify-server defaults
+[ -f /usr/sbin/update-rc.d ] && $SUDO update-rc.d userify-server defaults
 
 cat << "EOF" > userify-start
 #!/bin/bash
@@ -264,12 +266,12 @@ do
 done) &
 EOF
 
-sudo mv userify-start /opt/userify-server/userify-start
+$SUDO mv userify-start /opt/userify-server/userify-start
 
-sudo chmod 755 /etc/init.d/userify-server /opt/userify-server/userify-server /opt/userify-server/userify-start
+$SUDO chmod 755 /etc/init.d/userify-server /opt/userify-server/userify-server /opt/userify-server/userify-start
 
 if [ -d /etc/logrotate.d ]; then
-    cat <<EOF | sudo tee /etc/logrotate.d/userify-server >/dev/null
+    cat <<EOF | $SUDO tee /etc/logrotate.d/userify-server >/dev/null
 # Userify Server log rotation
 /var/log/userify-server.log {
     daily
@@ -285,9 +287,9 @@ else
     echo "for your distribution, or email support@userify.com for assistance."
 fi
 
-[ -f /usr/sbin/update-rc.d ] && sudo update-rc.d userify-server defaults
+[ -f /usr/sbin/update-rc.d ] && $SUDO update-rc.d userify-server defaults
 
-sudo /opt/userify-server/userify-start 2>&1 |sudo tee /var/log/userify-server.log >/dev/null &
+$SUDO /opt/userify-server/userify-start 2>&1 |$SUDO tee /var/log/userify-server.log >/dev/null &
 
 sleep 1
 
