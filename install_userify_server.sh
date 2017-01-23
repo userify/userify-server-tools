@@ -77,6 +77,8 @@ function rhel_prereqs {
         $SUDO chkconfig redis on && \
         $SUDO sed -i "s/Defaults requiretty/# &/" /etc/sudoers && \
         $SUDO service redis start
+    set +e
+    $SUDO systemctl enable redis-server
 
 }
 
@@ -288,6 +290,11 @@ else
 fi
 
 [ -f /usr/sbin/update-rc.d ] && $SUDO update-rc.d userify-server defaults
+set +e
+# needed for docker
+$SUDO $(which systemctl) && $SUDO systemctl enable redis-server
+$SUDO $(which systemctl) && $SUDO systemctl enable userify-server
+set -e
 
 $SUDO /opt/userify-server/userify-start 2>&1 |$SUDO tee /var/log/userify-server.log >/dev/null &
 
