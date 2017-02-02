@@ -148,8 +148,9 @@ $SUDO $pip install --upgrade \
     cryptography \
     paste \
     python-digitalocean \
-    # gevent==1.1b4 \
-    # gevent-websocket \
+    gevent \
+    gevent-websocket \
+    # ==1.1b4 \
 
 
 # OLD Python versions (python <= 2.5) also need ssl installed:
