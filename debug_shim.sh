@@ -17,6 +17,10 @@ uname -a
 echo
 python --version 2>&1
 echo
+uptime
+echo
+ps axfg |grep shim
+echo
 grep userify /etc/passwd
 echo
 ls -al /home/*/.ssh/
