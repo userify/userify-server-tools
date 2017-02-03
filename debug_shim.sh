@@ -7,9 +7,11 @@ python --version
 ls -al /etc/sudoers.d/
 grep userify /etc/passwd
 ls -al /home/*/.ssh/
+
+sed -i.backup-$(date -I) "s/debug=0/debug=1/" /opt/userify/userify_config.py
     
-for fn in /var/log/userify-shim.log /var/log/shim.log /opt/userify/creds.py /opt/userify/userify_config.py /opt/userify/shim.sh /etc/rc.local \
-    $(ls -1 /home/*/.ssh/authorized_keys) $(ls -1 /etc/sudoers.d/)
+for fn in /var/log/userify-shim.log /var/log/shim.log /etc/rc.local \
+    $(ls -1 /home/*/.ssh/authorized_keys) $(ls -1 /etc/sudoers.d/) $(ls -1 /opt/userify/)
 do
     if [ -f "$fn" ]; then
         echo
