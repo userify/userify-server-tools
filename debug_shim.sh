@@ -1,6 +1,6 @@
 #! /bin/sh
 
-cat << "EOF" |sudo -sE > debug.log.gz 2>&1
+cat << "EOF" |sudo -sE |gzip > debug.log.gz 2>&1
 uname -a
 echo
 python --version
