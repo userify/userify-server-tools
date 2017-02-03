@@ -147,10 +147,7 @@ $SUDO $pip install --upgrade \
     pyopenssl \
     cryptography \
     paste \
-    python-digitalocean \
-    gevent \
-    gevent-websocket \
-    # ==1.1b4 \
+    apache-libcloud \
 
 
 # OLD Python versions (python <= 2.5) also need ssl installed:
