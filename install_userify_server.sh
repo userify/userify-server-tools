@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 
 # Userify Server Installer Script
-# Copyright (c) 2016 Userify Corporation
+# Copyright (c) 2017 Userify Corporation
 # Installation instructions:
 # https://userify.com/docs/enterprise/installation-enterprise/
 
@@ -24,7 +24,8 @@ read -r URL
 fi
 
 # RHEL/CentOS/AMAZON PREREQUISITES
-# The sudoers fix is due to a long-standing bug in RHEL that will be corrected in RHEL8:
+# The sudoers fix is due to a long-standing bug in RHEL that will be corrected
+# in RHEL8:
 # https://bugzilla.redhat.com/show_bug.cgi?id=1020147
 
 #
@@ -33,7 +34,7 @@ fi
 # full redis server with client hiredis.x86_64
 #
 
-if [[ $(uname -a |grep amzn) ]]; then
+if [[ $(uname -a | grep amzn) ]]; then
     # Error: Package: redis-2.8.19-2.el7.x86_64 (epel)
     # Requires: systemd
     cat <<- EOF
