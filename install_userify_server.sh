@@ -37,7 +37,7 @@ if uname -a | grep -q amzn; then
     # Error: Package: redis-2.8.19-2.el7.x86_64 (epel)
     # Requires: systemd
     cat <<- EOF
-Amazon Linux does not support the installation of the Redis Database, so this script does not currently support installing on Amazon\'s Linux.
+Amazon\'s Linux does not support the installation of the Redis Database, so this installation script is not meant for - and we do not provide support for -  running this on Amazon\'s Linux.
 
 However, if you install Redis on Amazon\'s Linux separately, or if you are using Userify Enterprise with a non-local Redis server, then please review this script and proceed to install separately.
 
