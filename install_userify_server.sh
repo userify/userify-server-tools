@@ -43,7 +43,7 @@ However, if you install Redis on Amazon\'s Linux separately, or if you are using
 
 NOTE: Please be sure to snap an AMI afterward
 
-Also, if you need additional assitance or would like a pre-installed, no-hassle Userify server published to your AWS account at no additional charge, please feel free to contact our support department!
+Also, if you need additional assistance or would like a pre-installed, no-hassle Userify server published to your AWS account at no additional charge, please feel free to contact our support department!
 EOF
     exit 1
 fi
