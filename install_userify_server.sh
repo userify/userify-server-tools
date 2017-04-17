@@ -33,18 +33,17 @@ fi
 # full redis server with client hiredis.x86_64
 #
 
-if [[ $(uname -a | grep amzn) ]]; then
+if uname -a | grep -q amzn; then
     # Error: Package: redis-2.8.19-2.el7.x86_64 (epel)
     # Requires: systemd
     cat <<- EOF
-Amazon Linux does not support installation of Redis, so this script does not
-support installation on Amazon Linux.  However, if you install Redis on Amazon
-Linux separately, or if you are using Userify Enterprise with a non-local Redis
-server, then please review this script and install separately. (Be sure to snap
-an AMI afterward.) Also, if you need additional assitance, or would like a
-pre-installed Userify server published to your AWS account at no additional
-charge, please contact support.
+Amazon Linux does not support the installation of the Redis Database, so this script does not currently support installing on Amazon\'s Linux.
 
+However, if you install Redis on Amazon\'s Linux separately, or if you are using Userify Enterprise with a non-local Redis server, then please review this script and proceed to install separately.
+
+NOTE: Please be sure to snap an AMI afterward
+
+Also, if you need additional assitance or would like a pre-installed, no-hassle Userify server published to your AWS account at no additional charge, please feel free to contact our support department!
 EOF
     exit 1
 fi
