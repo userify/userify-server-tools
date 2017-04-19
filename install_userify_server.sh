@@ -5,20 +5,19 @@
 # Installation instructions:
 # https://userify.com/docs/enterprise/installation-enterprise/
 
-SUDO=$(which sudo)
+SUDO=$(command -v sudo)
 
-if [[ ! $URL ]]; then
+if [[ ! "$URL" ]]; then
 cat <<- EOF
-PLEASE NOTE: AUTOMATIC REDIS INSTALLATION
 
-This script will automatically install Redis Server Database for a
+TAKE NOTE: This script installs its own Redis Database Server
+
+This script will automatically install a Redis Server Database for a
 single-server installation.
 
-For a multi-server or using third-party redis (Elasticache, RedisLabs, etc)
-support, remove the local Redis server after installation completes, as
-Redis is no longer required for all installations.
+For a multi-server setup or if you are already using a third-party redis installation, (Elasticache, RedisLabs, etc.) please be sure to remove the  Redis server instance after this scripts installation completes, as Redis is no longer required for all installations.
 
-Now, please paste the required URL for your userify server installation.
+Now, please paste the required URL for your specific Userify server installation.
 EOF
 read -r URL
 fi
