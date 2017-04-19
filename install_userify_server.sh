@@ -149,8 +149,8 @@ $SUDO $pip install --upgrade \
     cryptography \
     paste \
     apache-libcloud \
-    service_identity \
-    ldaptor \
+    # service_identity \
+    # ldaptor \
 
 
 # OLD Python versions (python <= 2.5) also need ssl installed:
