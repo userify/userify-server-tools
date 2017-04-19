@@ -48,7 +48,7 @@ EOF
     exit 1
 fi
 
-epel_release="https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
+epel_release=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
 # RHEL/CentOS PREREQUISITES
 function rhel_prereqs {
@@ -98,8 +98,8 @@ function debian_prereqs {
 }
 
 
-$SUDO command -v yum 2>/dev/null && rhel_prereqs
-$SUDO command -v apt-get 2>/dev/null && debian_prereqs
+$SUDO which yum 2>/dev/null && rhel_prereqs
+$SUDO which apt-get 2>/dev/null && debian_prereqs
 
 # ALL DISTRIBUTIONS
 
@@ -114,7 +114,7 @@ $SUDO command -v apt-get 2>/dev/null && debian_prereqs
 
 set -e
 PATH="/usr/local/bin/:/usr/local/sbin/:$PATH"
-pip=$(command -v pip)
+pip=$(which pip)
 $SUDO $pip install --upgrade \
     cffi \
     ndg-httpsclient \
@@ -291,11 +291,11 @@ fi
 [ -f /usr/sbin/update-rc.d ] && $SUDO update-rc.d userify-server defaults
 set +e
 # needed for docker
-$SUDO "$(command -v systemctl)" && $SUDO systemctl enable redis-server
-$SUDO "$(command -v systemctl)" && $SUDO systemctl enable userify-server
+$SUDO $(which systemctl) && $SUDO systemctl enable redis-server
+$SUDO $(which systemctl) && $SUDO systemctl enable userify-server
 set -e
 
-$SUDO /opt/userify-server/userify-start 2>&1 | $SUDO tee /var/log/userify-server.log >/dev/null &
+$SUDO /opt/userify-server/userify-start 2>&1 |$SUDO tee /var/log/userify-server.log >/dev/null &
 
 sleep 1
 
