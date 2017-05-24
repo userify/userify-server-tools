@@ -1,9 +1,14 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
-# Userify Server Installer Script
-# Copyright (c) 2017 Userify Corporation
-# Installation instructions:
-# https://userify.com/docs/enterprise/installation-enterprise/
+function install_userify(){
+
+cat <<- EOF
+
+Userify Server Installer Script
+Copyright (c) 2017 Userify Corporation
+Installation instructions:
+https://userify.com/docs/enterprise/installation-enterprise/
+EOF
 
 SUDO=$(command -v sudo)
 
@@ -15,7 +20,10 @@ TAKE NOTE: This script installs its own Redis Database Server
 This script will automatically install a Redis Server Database for a
 single-server installation.
 
-For a multi-server setup or if you are already using a third-party redis installation, (Elasticache, RedisLabs, etc.) please be sure to remove the  Redis server instance after this scripts installation completes, as Redis is no longer required for all installations.
+For a multi-server setup or if you are already using a third-party redis
+installation, (Elasticache, RedisLabs, etc.) please be sure to remove the
+Redis server instance after this scripts installation completes, as Redis is no
+longer required for all installations.
 
 Now, please paste the required URL for your specific Userify server installation.
 EOF
@@ -41,10 +49,22 @@ Amazon Linux does not support installation of Redis, so this script does not
 support installation on Amazon Linux.  However, if you install Redis on Amazon
 Linux separately, or if you are using Userify Enterprise with a non-local Redis
 server, then please review this script and install separately. (Be sure to snap
-an AMI afterward.) Also, if you need additional assitance, or would like a
+an AMI afterward.) Also, if you need additional assistance, or would like a
 pre-installed Userify server published to your AWS account at no additional
 charge, please contact support.
 
+Amazon Linux is only supported for the Userify shim and not the server.
+
+EOF
+    exit 1
+fi
+
+if [[ $(grep "Ubuntu 14.04" /etc/issue) ]]; then
+    # Error: TLS not supported
+    cat <<- EOF
+Unfortunately, Ubuntu 14.04 LTS does not support newer cryptographic extensions
+for TLS and so is only supported for the Userify shim and not the server.
+Please install on Ubuntu 16.04 LTS instead.
 EOF
     exit 1
 fi
@@ -85,15 +105,19 @@ function rhel_prereqs {
 # DEBIAN/UBUNTU PREREQUISITES
 function debian_prereqs {
     echo "Installing Debian/Ubuntu Prerequisites"
+    export DEBIAN_FRONTEND=noninteractive
     $SUDO apt-get update
-    $SUDO apt-get -qy upgrade
-    $SUDO apt-get install -qqy build-essential python-dev libffi-dev zlib1g-dev \
+    $SUDO DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+         -qqy bupgrade
+    $SUDO DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+         install -qqy build-essential python-dev libffi-dev zlib1g-dev \
     libjpeg-dev libssl-dev python-lxml libxml2-dev libldap2-dev libsasl2-dev \
     libxslt1-dev redis-server ntpdate curl
     # get immediate timefix
-    $SUDO ntpdate pool.ntp.org
-    $SUDO apt-get install -qqy ntp
     set +e
+    $SUDO ntpdate pool.ntp.org
+    $SUDO DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+        install -qqy ntp
     curl -# "https://bootstrap.pypa.io/get-pip.py" | $SUDO -H /usr/bin/env python
     set -e
 }
@@ -102,54 +126,21 @@ function debian_prereqs {
 $SUDO which yum 2>/dev/null && rhel_prereqs
 $SUDO which apt-get 2>/dev/null && debian_prereqs
 
+
 # ALL DISTRIBUTIONS
 
 # if any required packages are missing, they will be installed automatically by
 # userify-server upon first startup, but doing this first helps catch any
 # first-start issues.
 
-# pyasn1 and cryptography installs are to work around SNI issues with older
-# openssl
-
-# see also https://github.com/kennethreitz/requests/issues/2022
-
 set -e
 PATH="/usr/local/bin/:/usr/local/sbin/:$PATH"
-pip=$(which pip)
-$SUDO $pip install --upgrade \
-    cffi \
-    ndg-httpsclient \
-    pyasn1 \
-    requests \
-    python-ldap \
-    python-slugify \
-    jinja2 \
-    shortuuid \
-    bottle \
-    otpauth \
-    qrcode \
-    ipwhois \
-    netaddr \
-    setproctitle \
-    py-bcrypt \
-    termcolor \
-    tomorrow \
-    addict \
-    pynacl \
-    rq \
-    boto \
-    pyindent \
-    spooky \
-    redis \
-    pillow \
-    emails \
-    html2text \
-    pyopenssl \
-    cryptography \
-    paste \
-    apache-libcloud \
-    service_identity \
-    ldaptor \
+pip=$(command -v pip)
+requires="cffi ndg-httpsclient pyasn1 requests python-ldap python-slugify jinja2 shortuuid bottle otpauth qrcode ipwhois netaddr setproctitle py-bcrypt termcolor tomorrow addict pynacl rq boto pyindent spooky redis pillow emails html2text pyopenssl cryptography paste apache-libcloud service_identity ldaptor"
+
+$SUDO $pip install --upgrade $requires
+# twice for ubuntu 14.04 issue with ssl
+$SUDO $pip install --upgrade $requires
 
 
 # OLD Python versions (python <= 2.5) also need ssl installed:
@@ -292,8 +283,8 @@ fi
 [ -f /usr/sbin/update-rc.d ] && $SUDO update-rc.d userify-server defaults
 set +e
 # needed for docker
-$SUDO $(which systemctl) && $SUDO systemctl enable redis-server
-$SUDO $(which systemctl) && $SUDO systemctl enable userify-server
+$SUDO $(command -v systemctl) && $SUDO systemctl enable redis-server
+$SUDO $(command -v systemctl) && $SUDO systemctl enable userify-server
 set -e
 
 $SUDO /opt/userify-server/userify-start 2>&1 |$SUDO tee /var/log/userify-server.log >/dev/null &
@@ -306,8 +297,7 @@ cat << "EOF" | more
 
 Welcome to Userify!       INSTALLATION COMPLETE
 
-Next, connect to this server's IP on HTTPS (i.e., https://192.168.1.1) and
-configure it.
+Next, connect to this server's IP on HTTPS and configure it.
 
 CONFIGURE THE SERVER:
 
@@ -336,3 +326,7 @@ if you have any questions.
 
 That's it! Thanks for installing Userify!
 EOF
+}
+
+install_userify
+
