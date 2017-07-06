@@ -107,8 +107,11 @@ function debian_prereqs {
     echo "Installing Debian/Ubuntu Prerequisites"
     export DEBIAN_FRONTEND=noninteractive
     $SUDO apt-get update
+    set +e
+    # this might get skipped
     $SUDO DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-         -qqy bupgrade
+         -qqy upgrade
+    set -e
     $SUDO DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
          install -qqy build-essential python-dev libffi-dev zlib1g-dev \
     libjpeg-dev libssl-dev python-lxml libxml2-dev libldap2-dev libsasl2-dev \
@@ -136,7 +139,7 @@ $SUDO which apt-get 2>/dev/null && debian_prereqs
 set -e
 PATH="/usr/local/bin/:/usr/local/sbin/:$PATH"
 pip=$(command -v pip)
-requires="cffi ndg-httpsclient pyasn1 requests python-ldap python-slugify jinja2 shortuuid bottle otpauth qrcode ipwhois netaddr setproctitle py-bcrypt termcolor tomorrow addict pynacl rq boto pyindent spooky redis pillow emails html2text pyopenssl cryptography paste apache-libcloud service_identity ldaptor"
+requires="cffi ndg-httpsclient pyasn1 requests python-ldap python-slugify jinja2 shortuuid bottle otpauth qrcode ipwhois netaddr setproctitle py-bcrypt termcolor tomorrow addict pynacl rq boto pyindent spooky redis pillow emails pyopenssl cryptography paste apache-libcloud service_identity ldaptor"
 
 $SUDO $pip install --upgrade $requires
 # twice for ubuntu 14.04 issue with ssl
