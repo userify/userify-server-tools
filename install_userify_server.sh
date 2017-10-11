@@ -98,8 +98,7 @@ function rhel_prereqs {
         $SUDO sed -i "s/Defaults requiretty/# &/" /etc/sudoers && \
         $SUDO service redis start
     set +e
-    $SUDO systemctl enable redis-server
-
+    $SUDO systemctl enable redis
 }
 
 # DEBIAN/UBUNTU PREREQUISITES
