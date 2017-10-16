@@ -2,10 +2,10 @@
 
 sudo sed -i.backup-$(date -I) "s/debug=0/debug=1/" /opt/userify/userify_config.py
     
-echo "Please make a change in the dashboard within the next 90 seconds."
-echo "You can control-C and restart this script if needed."
+echo "Please change the permissions for this server or your SSH key (just add '#test1') in the dashboard within the next 30 seconds to trigger a change here."
+echo "You can press control-C and restart this script if needed."
 
-for foo in $(seq 1 90)
+for foo in $(seq 1 30)
 do
     echo -n "$foo "
     sleep 1
