@@ -47,7 +47,21 @@ do
     echo
     echo
 done
+
+echo "Shim Execution: debug"
+
+static_host="static.userify.com"
+touch /opt/userify/userify_config.py
+source /opt/userify/userify_config.py
+[ "x$self_signed" == "x1" ] && SELFSIGNED='k' || SELFSIGNED=''
+
+# kick off shim.py
+[ -z "$PYTHON" ] && PYTHON="$(which python)"
+echo "SELF_SIGNED: $SELF_SIGNED"
+echo "PYTHON: $PYTHON"
+curl -1 -f${SELFSIGNED}Ss https://$static_host/shim.py | $PYTHON -u
+
 EOF
 
-echo "Please use scp or sftp to retrieve debug.log.gz and attach to your bug report."
+echo "Please use scp or sftp to retrieve debug.log.gz and attach to your bug report, or type 'zcat debug.log.gz' to copy/paste."
 
