@@ -1,7 +1,7 @@
 #! /bin/bash -e
 
 # example usage:
-# curl -# https://usrfy.io/upgrade.sh enterprise |sudo -sE
+# curl -# https://deploy.userify.com/upgrade.sh enterprise |sudo -sE
 
 tmpfile=$(mktemp)
 edition="$1"
