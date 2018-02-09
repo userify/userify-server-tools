@@ -105,6 +105,8 @@ function rhel_prereqs {
 function debian_prereqs {
     echo "Installing Debian/Ubuntu Prerequisites"
     export DEBIAN_FRONTEND=noninteractive
+    # this is necessary because it's too old; fetch from pip instead:
+    sudo apt-get --purge remove python-cryptography
     $SUDO apt-get update
     set +e
     # this might get skipped
