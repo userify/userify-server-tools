@@ -18,6 +18,6 @@ This is the shell script that does the work of installation. It's intended to be
 You can manually upgrade Userify Servers if needed with this script. Note that this script is almost never needed, since Userify will automatically apply security patches and the shim automatically upgrades from the server itself. Depending on your SLA and for Userify Enterprise, you may need to upgrade on your server or cluster for version upgrades.
 
 
-.
 
-By purchasing, downloading, using, or installing the Userify software, you indicate that you agree to the Terms and Conditions.
+
+*By purchasing, downloading, using, or installing the Userify software, you indicate that you agree to the Terms and Conditions.*
