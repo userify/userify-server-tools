@@ -142,9 +142,9 @@ PATH="/usr/local/bin/:/usr/local/sbin/:$PATH"
 pip=$(command -v pip)
 requires="cffi ndg-httpsclient pyasn1 requests python-ldap python-slugify jinja2 shortuuid bottle otpauth qrcode ipwhois netaddr setproctitle py-bcrypt termcolor tomorrow addict pynacl rq boto pyindent spooky redis pillow emails pyopenssl cryptography paste apache-libcloud service_identity ldaptor"
 
-$SUDO $pip install --compile --system --upgrade $requires
+$SUDO $pip install --compile --upgrade $requires
 # twice for ubuntu 14.04 issue with ssl
-$SUDO $pip install --compile --system $requires
+$SUDO $pip install --compile $requires
 
 
 # OLD Python versions (python <= 2.5) also need ssl installed:
