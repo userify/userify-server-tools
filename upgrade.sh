@@ -1,17 +1,20 @@
 #! /bin/bash -e
 
 # example usage:
-# curl -# https://deploy.userify.com/upgrade.sh enterprise |sudo -sE
+# curl -# https://deploy.userify.com/upgrade.sh | EDITION=enterprise sudo -sE
 
 tmpfile=$(mktemp)
-edition="$1"
-if [ -z "$edition" ]; then
-    edition="enterprise"
-    echo "Usage: $0 EDITION"
+if [ -z "$EDITION" ]; then
+    EDITION="enterprise"
+    echo "Usage:"
+    echo "export EDITION=enterprise"
+    echo "$0"
     echo "EDITION defaults to enterprise and can be 'enterprise' or 'pro'. If you are on pro, please press control-C now."
+    echo "Otherwise, press Enter."
+    read x
 fi
 
-curl -# "https://releases.userify.com/dist/userify-$edition-server.gz" | gunzip > "$tmpfile"
+curl -# "https://releases.userify.com/dist/userify-$EDITION-server.gz" | gunzip > "$tmpfile"
 
 echo "One moment.. you can cancel now by pressing control-C."
 # sleep for a few seconds to allow control-C
