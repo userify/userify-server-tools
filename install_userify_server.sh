@@ -287,8 +287,11 @@ fi
 [ -f /usr/sbin/update-rc.d ] && $SUDO update-rc.d userify-server defaults
 set +e
 # needed for docker
-$SUDO $(command -v systemctl) && $SUDO systemctl --quiet enable redis-server
-$SUDO $(command -v systemctl) && $SUDO systemctl --quiet enable userify-server
+$SUDO $(which systemctl) && (
+  $SUDO systemctl --quiet enable redis-server;
+  $SUDO systemctl --quiet enable userify-server
+)
+ 
 set -e
 
 $SUDO /opt/userify-server/userify-start 2>&1 |$SUDO tee /var/log/userify-server.log >/dev/null &
