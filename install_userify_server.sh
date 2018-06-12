@@ -140,7 +140,7 @@ $SUDO which apt-get 2>/dev/null && debian_prereqs
 set -e
 PATH="/usr/local/bin/:/usr/local/sbin/:$PATH"
 pip=$(command -v pip)
-requires="cffi ndg-httpsclient pyasn1 requests python-ldap python-slugify jinja2 shortuuid bottle otpauth qrcode ipwhois netaddr setproctitle py-bcrypt termcolor tomorrow addict pynacl rq boto pyindent spooky redis pillow emails pyopenssl cryptography paste apache-libcloud service_identity ldaptor"
+requires="cffi ndg-httpsclient pyasn1 requests python-ldap python-slugify jinja2 shortuuid bottle otpauth qrcode ipwhois netaddr setproctitle py-bcrypt termcolor tomorrow addict pynacl rq boto pyindent spooky redis pillow emails pyopenssl cryptography paste apache-libcloud service_identity ldaptor html2text"
 
 $SUDO $pip install --compile --upgrade $requires
 # twice for ubuntu 14.04 issue with ssl
