@@ -42,9 +42,10 @@ fi
 #
 
 if [[ $(uname -a | grep amzn) ]]; then
-    # Error: Package: redis-2.8.19-2.el7.x86_64 (epel)
-    # Requires: systemd
-    cat <<- EOF
+    if [[ ! -f /etc/system-release ]] || [[ ! $(grep "Amazon Linux 2" /etc/system-release) ]]; then
+        # Error: Package: redis-2.8.19-2.el7.x86_64 (epel)
+        # Requires: systemd
+        cat <<- EOF
 Amazon Linux does not support installation of Redis, so this script does not
 support installation on Amazon Linux.  However, if you install Redis on Amazon
 Linux separately, or if you are using Userify Enterprise with a non-local Redis
@@ -54,9 +55,9 @@ pre-installed Userify server published to your AWS account at no additional
 charge, please contact support.
 
 Amazon Linux is only supported for the Userify shim and not the server.
-
 EOF
-    exit 1
+        exit 1
+    fi
 fi
 
 if [[ $(grep "Ubuntu 14.04" /etc/issue) ]]; then
@@ -143,8 +144,16 @@ pip=$(command -v pip)
 requires="cffi ndg-httpsclient pyasn1 requests python-ldap python-slugify jinja2 shortuuid bottle otpauth qrcode ipwhois netaddr setproctitle py-bcrypt termcolor tomorrow addict pynacl rq boto pyindent spooky redis pillow emails pyopenssl cryptography paste apache-libcloud service_identity ldaptor"
 
 $SUDO $pip install --compile --upgrade $requires
-# twice for ubuntu 14.04 issue with ssl
-$SUDO $pip install --compile $requires
+
+set +e
+# some distributions may already have this installed in a distribution package,
+# causing pip installation to fail.
+$SUDO $pip install --compile --upgrade requests
+set -e
+
+# Ubuntu 14.04 LTS no longer supported for new server installations:
+# # twice for ubuntu 14.04 issue with ssl
+# $SUDO $pip install --compile $requires
 
 
 # OLD Python versions (python <= 2.5) also need ssl installed:
