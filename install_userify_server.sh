@@ -43,8 +43,6 @@ fi
 
 if [[ $(uname -a | grep amzn) ]]; then
     if [[ ! -f /etc/system-release ]] || [[ ! $(grep "Amazon Linux 2" /etc/system-release) ]]; then
-        # Error: Package: redis-2.8.19-2.el7.x86_64 (epel)
-        # Requires: systemd
         cat <<- EOF
 Amazon Linux does not support installation of Redis, so this script does not
 support installation on Amazon Linux.  However, if you install Redis on Amazon
