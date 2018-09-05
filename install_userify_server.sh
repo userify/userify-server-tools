@@ -92,14 +92,18 @@ function rhel_prereqs {
     $SUDO yum install -q -y $epel_release
     set -e
 
-    # Redis installation fails on Amazon Linux due to missing systemd:
-
-    $SUDO yum install -q -y --enablerepo=epel redis && \
-        $SUDO chkconfig redis on && \
-        $SUDO sed -i "s/Defaults requiretty/# &/" /etc/sudoers && \
-        $SUDO service redis start
-    set +e
-    $SUDO systemctl enable redis
+    # Redis installation fails on Amazon Linux 1 due to missing systemd,
+    # but works fine on Amazon Linux 2
+    if [ -f /usr/bin/amazon-linux-extras ]; then
+        $SUDO amazon-linux-extras install redis4.0
+    else
+        $SUDO yum install -q -y --enablerepo=epel redis && \
+            $SUDO chkconfig redis on && \
+            $SUDO sed -i "s/Defaults requiretty/# &/" /etc/sudoers && \
+            $SUDO service redis start
+        set +e
+        $SUDO systemctl enable redis
+    fi
 }
 
 # DEBIAN/UBUNTU PREREQUISITES
@@ -141,7 +145,7 @@ $SUDO which apt-get 2>/dev/null && debian_prereqs
 set -e
 PATH="/usr/local/bin/:/usr/local/sbin/:$PATH"
 pip=$(command -v pip)
-requires="cffi ndg-httpsclient pyasn1 requests python-ldap python-slugify jinja2 shortuuid bottle otpauth qrcode ipwhois netaddr setproctitle py-bcrypt termcolor tomorrow addict pynacl rq boto pyindent spooky redis pillow emails pyopenssl cryptography paste apache-libcloud service_identity ldaptor"
+requires="cffi ndg-httpsclient pyasn1 python-ldap python-slugify jinja2 shortuuid bottle otpauth qrcode ipwhois netaddr setproctitle py-bcrypt termcolor tomorrow addict pynacl rq boto pyindent spooky redis pillow emails pyopenssl cryptography paste apache-libcloud service_identity ldaptor"
 
 $SUDO $pip install --compile --upgrade $requires
 
@@ -334,6 +338,11 @@ Once your server restarts after initial configuration, create a Userify
 admin user. Please note: this is a user account that is used to create your
 company and can appoint other admins. It is a different user account than the
 one shown above, which is only used for server configuration.
+
+IMPORTANT: Please configure this server for:
+
+    1.  Automatic OS Upgrades (Userify will automatically upgrade)
+    2.  Automatic Backups of /opt/userify-server
 
 Lots more docs at https://userify.com/docs, and reach out to support@userify.com
 if you have any questions.
