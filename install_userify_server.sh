@@ -2,6 +2,8 @@
 
 function install_userify(){
 
+export python_requires="cffi ndg-httpsclient pyasn1 python-ldap python-slugify jinja2 shortuuid bottle otpauth qrcode ipwhois netaddr setproctitle py-bcrypt termcolor tomorrow addict pynacl rq boto pyindent spooky redis==2.10.6 pillow emails cryptography paste apache-libcloud service_identity ldaptor"
+
 cat <<- EOF
 
 Userify Server Installer Script
@@ -127,6 +129,7 @@ function debian_prereqs {
         install -qqy ntp
     curl -# "https://bootstrap.pypa.io/get-pip.py" | $SUDO -H /usr/bin/env python
     set -e
+    python_requires="$python_requires pyopenssl"
 }
 
 
@@ -143,19 +146,14 @@ $SUDO which apt-get 2>/dev/null && debian_prereqs
 set -e
 PATH="/usr/local/bin/:/usr/local/sbin/:$PATH"
 pip=$(which pip)
-requires="cffi ndg-httpsclient pyasn1 python-ldap python-slugify jinja2 shortuuid bottle otpauth qrcode ipwhois netaddr setproctitle py-bcrypt termcolor tomorrow addict pynacl rq boto pyindent spooky redis==2.10.6 pillow emails pyopenssl cryptography paste apache-libcloud service_identity ldaptor"
 
-$SUDO $pip install --compile --upgrade $requires
+$SUDO $pip install --compile --upgrade $python_requires
 
 set +e
 # some distributions may already have this installed in a distribution package,
 # causing pip installation to fail.
 $SUDO $pip install --compile --upgrade requests
 set -e
-
-# Ubuntu 14.04 LTS no longer supported for new server installations:
-# # twice for ubuntu 14.04 issue with ssl
-# $SUDO $pip install --compile $requires
 
 
 # OLD Python versions (python <= 2.5) also need ssl installed:
