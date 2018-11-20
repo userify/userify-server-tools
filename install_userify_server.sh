@@ -143,7 +143,7 @@ $SUDO which apt-get 2>/dev/null && debian_prereqs
 set -e
 PATH="/usr/local/bin/:/usr/local/sbin/:$PATH"
 pip=$(command -v pip)
-requires="cffi ndg-httpsclient pyasn1 python-ldap python-slugify jinja2 shortuuid bottle otpauth qrcode ipwhois netaddr setproctitle py-bcrypt termcolor tomorrow addict pynacl rq boto pyindent spooky redis pillow emails pyopenssl cryptography paste apache-libcloud service_identity ldaptor"
+requires="cffi ndg-httpsclient pyasn1 python-ldap python-slugify jinja2 shortuuid bottle otpauth qrcode ipwhois netaddr setproctitle py-bcrypt termcolor tomorrow addict pynacl rq boto pyindent spooky redis==2.10.6 pillow emails pyopenssl cryptography paste apache-libcloud service_identity ldaptor"
 
 $SUDO $pip install --compile --upgrade $requires
 
