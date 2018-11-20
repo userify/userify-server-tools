@@ -297,7 +297,9 @@ fi
 
 [ -f /usr/sbin/update-rc.d ] && $SUDO update-rc.d userify-server defaults
 set +e
+# Debian/Ubuntu:
 $SUDO which systemctl && $SUDO systemctl --quiet enable redis-server
+# RHEL/Centos:
 $SUDO which systemctl && $SUDO systemctl --quiet enable redis
 $SUDO which systemctl && $SUDO systemctl --quiet enable userify-server
 $SUDO which systemctl && $SUDO systemctl --quiet start redis-server
