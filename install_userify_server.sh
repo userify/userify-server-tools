@@ -10,7 +10,7 @@ Installation instructions:
 https://userify.com/docs/enterprise/installation-enterprise/
 EOF
 
-SUDO="$(command -v sudo) --set-home"
+SUDO="$(which sudo) --set-home"
 
 if [[ ! "$URL" ]]; then
 cat <<- EOF
@@ -142,7 +142,7 @@ $SUDO which apt-get 2>/dev/null && debian_prereqs
 
 set -e
 PATH="/usr/local/bin/:/usr/local/sbin/:$PATH"
-pip=$(command -v pip)
+pip=$(which pip)
 requires="cffi ndg-httpsclient pyasn1 python-ldap python-slugify jinja2 shortuuid bottle otpauth qrcode ipwhois netaddr setproctitle py-bcrypt termcolor tomorrow addict pynacl rq boto pyindent spooky redis==2.10.6 pillow emails pyopenssl cryptography paste apache-libcloud service_identity ldaptor"
 
 $SUDO $pip install --compile --upgrade $requires
@@ -297,12 +297,12 @@ fi
 
 [ -f /usr/sbin/update-rc.d ] && $SUDO update-rc.d userify-server defaults
 set +e
-$SUDO command -v systemctl && $SUDO systemctl --quiet enable redis-server
-$SUDO command -v systemctl && $SUDO systemctl --quiet enable redis
-$SUDO command -v systemctl && $SUDO systemctl --quiet enable userify-server
-$SUDO command -v systemctl && $SUDO systemctl --quiet start redis-server
-$SUDO command -v systemctl && $SUDO systemctl --quiet start redis
-$SUDO command -v systemctl && $SUDO systemctl --quiet start userify-server
+$SUDO which systemctl && $SUDO systemctl --quiet enable redis-server
+$SUDO which systemctl && $SUDO systemctl --quiet enable redis
+$SUDO which systemctl && $SUDO systemctl --quiet enable userify-server
+$SUDO which systemctl && $SUDO systemctl --quiet start redis-server
+$SUDO which systemctl && $SUDO systemctl --quiet start redis
+$SUDO which systemctl && $SUDO systemctl --quiet start userify-server
  
 set -e
 
