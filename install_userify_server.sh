@@ -12,7 +12,7 @@ Installation instructions:
 https://userify.com/docs/enterprise/installation-enterprise/
 EOF
 
-SUDO="$(which sudo) --set-home"
+SUDO="$(command -v sudo) --set-home"
 
 if [[ ! "$URL" ]]; then
 cat <<- EOF
@@ -116,25 +116,25 @@ function debian_prereqs {
     set +e
     # this might get skipped
     $SUDO DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-         -qqy upgrade
+         upgrade
     set -e
     $SUDO DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-         install -qqy build-essential python-dev libffi-dev zlib1g-dev \
+         install build-essential python-dev libffi-dev zlib1g-dev \
     libjpeg-dev libssl-dev python-lxml libxml2-dev libldap2-dev libsasl2-dev \
     libxslt1-dev redis-server ntpdate curl
     # get immediate timefix
     set +e
     $SUDO ntpdate pool.ntp.org
     $SUDO DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-        install -qqy ntp
+        install ntp
     curl -# "https://bootstrap.pypa.io/get-pip.py" | $SUDO -H /usr/bin/env python
     set -e
     python_requires="$python_requires pyopenssl"
 }
 
 
-$SUDO which yum 2>/dev/null && rhel_prereqs
-$SUDO which apt-get 2>/dev/null && debian_prereqs
+$SUDO command -v yum 2>/dev/null && rhel_prereqs
+$SUDO command -v apt-get 2>/dev/null && debian_prereqs
 
 
 # ALL DISTRIBUTIONS
@@ -145,7 +145,7 @@ $SUDO which apt-get 2>/dev/null && debian_prereqs
 
 set -e
 PATH="/usr/local/bin/:/usr/local/sbin/:$PATH"
-pip=$(which pip)
+pip=$(command -v pip)
 
 $SUDO $pip install --compile --upgrade $python_requires
 
@@ -296,13 +296,13 @@ fi
 [ -f /usr/sbin/update-rc.d ] && $SUDO update-rc.d userify-server defaults
 set +e
 # Debian/Ubuntu:
-$SUDO which systemctl && $SUDO systemctl --quiet enable redis-server
+$SUDO command -v systemctl && $SUDO systemctl --quiet enable redis-server
 # RHEL/Centos:
-$SUDO which systemctl && $SUDO systemctl --quiet enable redis
-$SUDO which systemctl && $SUDO systemctl --quiet enable userify-server
-$SUDO which systemctl && $SUDO systemctl --quiet start redis-server
-$SUDO which systemctl && $SUDO systemctl --quiet start redis
-$SUDO which systemctl && $SUDO systemctl --quiet start userify-server
+$SUDO command -v systemctl && $SUDO systemctl --quiet enable redis
+$SUDO command -v systemctl && $SUDO systemctl --quiet enable userify-server
+$SUDO command -v systemctl && $SUDO systemctl --quiet start redis-server
+$SUDO command -v systemctl && $SUDO systemctl --quiet start redis
+$SUDO command -v systemctl && $SUDO systemctl --quiet start userify-server
  
 set -e
 
